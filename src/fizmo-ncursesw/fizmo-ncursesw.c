@@ -631,50 +631,39 @@ static void print_startup_syntax()
 
 static int parse_config_parameter(char *key, char *value)
 {
-  if (strcasecmp(key, "background-color") == 0)
+  if (strcasecmp(key, "enable-xterm-title") == 0)
   {
-    return 0;
-  }
-  else if (strcasecmp(key, "foreground-color") == 0)
-  {
-    return 0;
-  }
-  else if (strcasecmp(key, "enable-xterm-title") == 0)
-  {
-    if ( (value != NULL) && (strcmp(value, "") != 0) )
+    if (value == NULL)
+      return -1;
+    else if ((strcasecmp(value, "true")==0) || (strcasecmp(value, "yes")==0))
+    {
       use_xterm_title = true;
-    return 0;
-  }
-  else if (strcasecmp(key, "left-margin") == 0)
-  {
-    /*
-    int_value = atoi(value);
-
-    if (int_value > 0)
-      left_padding = int_value;
-    */
-
-    return 0;
-  }
-  else if (strcasecmp(key, "right-margin") == 0)
-  {
-    /*
-    int_value = atoi(value);
-
-    if (int_value > 0)
-      right_padding = int_value;
-    */
-
-    return 0;
+      return 0;
+    }
+    else if ((strcasecmp(value, "false")==0) || (strcasecmp(value, "no")==0))
+    {
+      use_xterm_title = false;
+      return 0;
+    }
+    else
+      return -1;
   }
   else if (strcasecmp(key, "dont-update-story-list") == 0)
   {
-    if ( (value != NULL) && (strcmp(value, "") != 0) )
+    if (value == NULL)
+      return -1;
+    else if ((strcasecmp(value, "true")==0) || (strcasecmp(value, "yes")==0))
+    {
       dont_update_story_list_on_start = true;
-    return 0;
+      return 0;
+    }
+    else
+      return -1;
   }
-
-  return 1;
+  else
+  {
+    return -2;
+  }
 }
 
 
@@ -2061,7 +2050,7 @@ int main(int argc, char *argv[])
   current_locale = setlocale(LC_ALL, "");
 
   initscr(); // to allow fizmo to invoke is_colour_available which in turn
-             // calls "has_colours" which won#t work without initscr().
+             // calls "has_colours" which won't work without initscr().
   fizmo_register_screen_cell_interface(&ncursesw_interface);
 
 #ifdef SOUND_INTERFACE_STRUCT_NAME
@@ -2077,6 +2066,9 @@ int main(int argc, char *argv[])
 
   TRACE_LOG("current locale: \"%s\".\n", current_locale);
 
+  // Parsing must occur after "fizmo_register_screen_cell_interface" so
+  // that fizmo knows where to forward "parse_config_parameter" parameters
+  // to.
   parse_fizmo_config_files();
 
   value = get_configuration_value("locale");
