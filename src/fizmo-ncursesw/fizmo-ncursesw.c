@@ -1232,7 +1232,7 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
   wint_t input;
   int read_retval;
   int new_signal;
-  int screen_height, screen_width;
+  //int screen_height, screen_width;
 
   FD_ZERO(&input_selectors);
   FD_SET(STDIN_FILENO, &input_selectors);
@@ -1376,9 +1376,10 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
 
           endwin();
           refresh();
-          getmaxyx(stdscr, screen_height, screen_width);
-          TRACE_LOG("New dimensions: %dx%d.\n", screen_width, screen_height);
-          new_cell_screen_size(screen_height, screen_width);
+          //getmaxyx(stdscr, screen_height, screen_width);
+          refresh_screen_size();
+          //TRACE_LOG("New dimensions: %dx%d.\n", screen_width, screen_height);
+          //new_cell_screen_size(screen_height, screen_width);
         }
         else
         {
