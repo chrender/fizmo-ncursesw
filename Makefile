@@ -12,7 +12,7 @@ endif
 
 all: src/fizmo-ncursesw/fizmo-ncursesw
 
-src/fizmo-ncursesw/fizmo-ncursesw:
+src/fizmo-ncursesw/fizmo-ncursesw::
 	cd src/fizmo-ncursesw ; make
 
 install: src/fizmo-ncursesw/fizmo-ncursesw
