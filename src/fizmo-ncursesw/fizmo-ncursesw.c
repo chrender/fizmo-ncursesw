@@ -416,15 +416,15 @@ static bool is_italic_available()
 static void print_startup_syntax()
 {
   int i;
-  //char **locales = get_valid_configuration_options("locale");
+  char **available_locales = get_available_locale_names();
 
-  //set_configuration_value("locale", fizmo_locale, "ncursesw");
+  endwin();
 
   streams_latin1_output("\n");
   i18n_translate(
       fizmo_ncursesw_module_name,
       i18n_ncursesw_USAGE_DESCRIPTION);
-  streams_latin1_output("\n");
+  streams_latin1_output("\n\n");
   i18n_translate(
       fizmo_ncursesw_module_name,
       i18n_ncursesw_FIZMO_NCURSESW_VERSION_P0S, FIZMO_NCURSESW_VERSION);
@@ -434,20 +434,18 @@ static void print_startup_syntax()
       i18n_ncursesw_LOCALES_AVAILIABLE);
   streams_latin1_output(" ");
 
-  /*
   i = 0;
-  while (locales[i] != NULL)
+  while (available_locales[i] != NULL)
   {
     if (i != 0)
       streams_latin1_output(", ");
 
-    streams_latin1_output(locales[i]);
-    free(locales[i]);
+    streams_latin1_output(available_locales[i]);
+    free(available_locales[i]);
     i++;
   }
-  free(locales);
+  free(available_locales);
   streams_latin1_output(".\n");
-  */
 
   i18n_translate(
       fizmo_ncursesw_module_name,
@@ -1290,6 +1288,10 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
             result = EVENT_WAS_CODE_CURSOR_RIGHT;
           else if (input == KEY_LEFT)
             result = EVENT_WAS_CODE_CURSOR_LEFT;
+          else if (input == KEY_NPAGE)
+            result = EVENT_WAS_CODE_PAGE_DOWN;
+          else if (input == KEY_PPAGE)
+            result = EVENT_WAS_CODE_PAGE_UP;
         }
         else if (input_return_code == OK)
         {
