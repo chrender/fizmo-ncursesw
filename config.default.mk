@@ -32,8 +32,8 @@ ENABLE_OPTIMIZATION = 1
 # Debug-Flags:
 
 # Uncomment to fill your harddisk _very_ fast:
-ENABLE_TRACING = 1
+#ENABLE_TRACING = 1
 
 # Add GDB symbols, only useful for debuggong:
-ENABLE_GDB_SYMBOLS = 1
+#ENABLE_GDB_SYMBOLS = 1
 
