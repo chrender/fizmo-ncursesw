@@ -2070,7 +2070,7 @@ int main(int argc, char *argv[])
 
   current_locale = setlocale(LC_ALL, "");
 
-  initscr(); // to allow fizmo to invoke is_colour_available which in turn
+  initscr(); // to allow cellif to invoke is_colour_available which in turn
              // calls "has_colours" which won't work without initscr().
   fizmo_register_screen_cell_interface(&ncursesw_interface);
 
