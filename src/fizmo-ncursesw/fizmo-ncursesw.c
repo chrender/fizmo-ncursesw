@@ -74,6 +74,7 @@
 #define NCURSESW_COLOUR_CLASS_BACKGROUND 1
 #define NCURSESW_WCHAR_T_BUF_SIZE 64
 #define NCURSESW_Z_UCS_BUF_SIZE 32
+#define NCURSESW_OUTPUT_CHAR_BUF_SIZE 80
 
 static char* interface_name = "ncursesw";
 static char* z_colour_names[] = { "black", "red", "green", "yellow", "blue",
@@ -100,6 +101,7 @@ static int infowin_skip_x;
 static bool infowin_full = false;
 static wchar_t wchar_t_buf[NCURSESW_WCHAR_T_BUF_SIZE];
 static z_ucs z_ucs_t_buf[NCURSESW_Z_UCS_BUF_SIZE];
+static char output_char_buf[NCURSESW_OUTPUT_CHAR_BUF_SIZE];
 //static z_colour ncursesw_custom_foreground_colour = Z_COLOUR_UNDEFINED;
 //static z_colour ncursesw_custom_background_colour = Z_COLOUR_UNDEFINED;
 //static z_colour ncursesw_current_foreground_colour = Z_COLOUR_UNDEFINED;
@@ -309,22 +311,22 @@ static void z_ucs_output(z_ucs *output)
   cchar_t wcval;
   int errorcode;
 
-  TRACE_LOG("Interface-Output: \"");
+  TRACE_LOG("Interface-Output(%d): \"", ncursesw_interface_open);
   TRACE_LOG_Z_UCS(output);
   TRACE_LOG("\".\n");
 
   if (ncursesw_interface_open == false)
   {
-    while (output != NULL)
+    while (*output != 0)
     {
-      output = z_ucs_string_to_wchar_t(
-          wchar_t_buf,
-          output,
-          NCURSESW_WCHAR_T_BUF_SIZE);
+      zucs_string_to_utf8_string(
+          output_char_buf,
+          &output,
+          NCURSESW_OUTPUT_CHAR_BUF_SIZE);
 
-      ncursesw_fputws(wchar_t_buf, stdout);
-      fflush(stdout);
+      fputs(output_char_buf, stdout);
     }
+    fflush(stdout);
   }
   else
   {
@@ -418,7 +420,6 @@ static void print_startup_syntax()
 {
   int i;
   char **available_locales = get_available_locale_names();
-
   endwin();
 
   streams_latin1_output("\n");
@@ -2194,10 +2195,8 @@ int main(int argc, char *argv[])
       }
       else
       {
-        */
         fizmo_locale = argv[argi];
         argi++;
-        /*
       }
       */
     }
