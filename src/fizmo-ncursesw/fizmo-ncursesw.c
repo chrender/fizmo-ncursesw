@@ -426,10 +426,26 @@ static void print_startup_syntax()
       fizmo_ncursesw_module_name,
       i18n_ncursesw_USAGE_DESCRIPTION);
   streams_latin1_output("\n\n");
+
   i18n_translate(
       fizmo_ncursesw_module_name,
       i18n_ncursesw_FIZMO_NCURSESW_VERSION_P0S, FIZMO_NCURSESW_VERSION);
-  streams_latin1_output("\n\n");
+  streams_latin1_output("\n");
+  i18n_translate(
+      fizmo_ncursesw_module_name,
+      i18n_ncursesw_LIBFIZMO_VERSION_P0S,
+      FIZMO_VERSION);
+  streams_latin1_output("\n");
+  if (active_sound_interface != NULL)
+  {
+    streams_latin1_output(active_sound_interface->get_interface_name());
+    streams_latin1_output(" ");
+    streams_latin1_output("version ");
+    streams_latin1_output(active_sound_interface->get_interface_version());
+    streams_latin1_output(".\n");
+  }
+  streams_latin1_output("\n");
+
   i18n_translate(
       fizmo_ncursesw_module_name,
       i18n_ncursesw_LOCALES_AVAILIABLE);

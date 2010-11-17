@@ -5,7 +5,10 @@ include ../../config.mk
 
 include $(FIZMO_INC_DIR)/fizmo/libfizmo.mk
 include $(FIZMO_INC_DIR)/fizmo/libcellif.mk
-include $(FIZMO_INC_DIR)/fizmo/libsndifsdl.mk
+
+ifneq ($(SOUND_INTERFACE_NAME),)
+include $(FIZMO_INC_DIR)/fizmo/$(SOUND_INTERFACE_NAME).mk
+endif
 
 CC = gcc -Wall
 CFLAGS = -g -O2 $(SOUND_INTERFACE_CFLAGS)
@@ -18,8 +21,8 @@ ifneq ($(ENABLE_TRACING),)
 override CFLAGS += -DENABLE_TRACING=
 endif
 
-ifdef $(SOUND_INTERFACE_STRUCT_NAME)
-ifdef $(SOUND_INTERFACE_INCLUDE_FILE)
+ifneq ($(SOUND_INTERFACE_STRUCT_NAME),)
+ifneq ($(SOUND_INTERFACE_INCLUDE_FILE),)
 SOUND_FLAGS=-DSOUND_INTERFACE_STRUCT_NAME="$(SOUND_INTERFACE_STRUCT_NAME)" \
 	-DSOUND_INTERFACE_INCLUDE_FILE="<$(SOUND_INTERFACE_INCLUDE_FILE)>"
 endif

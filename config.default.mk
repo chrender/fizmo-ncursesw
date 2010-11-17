@@ -5,6 +5,8 @@ CC = gcc
 AR = ar
 CFLAGS = -Wall -Wextra
 
+SOUND_INTERFACE_NAME = libsndifsdl
+
 ifneq ($(DESTDIR),)
 INSTALL_PREFIX = $(DESTDIR)
 else
