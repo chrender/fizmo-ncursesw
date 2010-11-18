@@ -45,3 +45,4 @@ Error \{0d} occured before read: "\{1s}".
 Unknown error case.
 Function call malloc(\{0d}) returned null, probably out of memory.
 fizmo-ncursesw version \{0s}.
+libcellinterface version \{0s}.

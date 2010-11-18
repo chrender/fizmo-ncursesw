@@ -437,6 +437,11 @@ static void print_startup_syntax()
       i18n_ncursesw_LIBFIZMO_VERSION_P0S,
       FIZMO_VERSION);
   streams_latin1_output("\n");
+  i18n_translate(
+      fizmo_ncursesw_module_name,
+      i18n_ncursesw_LIBCELLINTERFACE_VERSION_P0S,
+      get_screen_cell_interface_version());
+  streams_latin1_output("\n");
   if (active_sound_interface != NULL)
   {
     streams_latin1_output(active_sound_interface->get_interface_name());
