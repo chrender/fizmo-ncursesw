@@ -1277,6 +1277,9 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
 
   while (input_should_terminate == false)
   {
+    TRACE_LOG("current errno: %d.\n", errno);
+    TRACE_LOG("setting up selectors.\n");
+
     FD_ZERO(&input_selectors);
     FD_SET(STDIN_FILENO, &input_selectors);
     FD_SET(ncursesw_if_signalling_pipe[0], &input_selectors);
@@ -1291,6 +1294,7 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
     if (select_retval > 0)
     {
       TRACE_LOG("select_retval > 0.\n");
+      TRACE_LOG("current errno: %d.\n", errno);
 
       // something has changed in one of out input pipes.
       if (FD_ISSET(STDIN_FILENO, &input_selectors))
@@ -1331,6 +1335,7 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
       }
       else if (FD_ISSET(ncursesw_if_signalling_pipe[0], &input_selectors))
       {
+        TRACE_LOG("current errno: %d.\n", errno);
         // the signal handler has written to our curses_if_signalling_pipe.
         // ensure that errno is != 0 before reading from the pipe. this is
         // due to the fact that even a successful read may set errno.
@@ -1416,6 +1421,10 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
 
         input_should_terminate = true;
       }
+    }
+    else
+    {
+      TRACE_LOG("select returned <=0, current errno: %d.\n", errno);
     }
   }
 
@@ -1558,6 +1567,18 @@ void clear_area(int startx, int starty, int xsize, int ysize)
 }
 
 
+static void set_cursor_visibility(bool visible)
+{
+  if (ncursesw_interface_open == true)
+  {
+    if (visible == true)
+      curs_set(1);
+    else
+      curs_set(0);
+  }
+}
+
+
 static struct z_screen_cell_interface ncursesw_interface =
 {
   &goto_yx,
@@ -1584,7 +1605,8 @@ static struct z_screen_cell_interface ncursesw_interface =
   &redraw_screen_from_scratch,
   &copy_area,
   &clear_to_eol,
-  &clear_area
+  &clear_area,
+  &set_cursor_visibility
 };
 
 
@@ -2020,7 +2042,7 @@ void catch_signal(int sig_num)
   int ncursesw_if_write_buffer;
 
   // Note:
-  // I think TRACE_LOGs in thus function may cause a deadlock in case
+  // Look like TRACE_LOGs in this function may cause a deadlock in case
   // they're called while a fflush for the tracelog is already underway.
 
   ncursesw_if_write_buffer = sig_num;
