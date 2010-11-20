@@ -77,8 +77,6 @@
 #define NCURSESW_OUTPUT_CHAR_BUF_SIZE 80
 
 static char* interface_name = "ncursesw";
-static char* z_colour_names[] = { "black", "red", "green", "yellow", "blue",
-  "magenta", "cyan", "white" };
 static int ncursesw_if_signalling_pipe[2];
 static struct sigaction default_sigaction;
 static struct itimerval timerval;
@@ -113,6 +111,7 @@ static char output_char_buf[NCURSESW_OUTPUT_CHAR_BUF_SIZE];
 static bool ncursesw_interface_open = false;
 static int n_color_pairs_in_use;
 static int n_color_pairs_availabe;
+static bool color_initialized = false;
 // This array contains (n_color_pairs_in_use) elements. The first element
 // contains the number of the color pair the was selected last, the
 // second element the color pair used before that. The array is used in
@@ -120,7 +119,6 @@ static int n_color_pairs_availabe;
 // provide. In such a case, the color pair that has not been used for
 // a longer time than all others is recycled.
 static short *color_pair_usage;
-static bool ncursesw_is_using_colours = false;
 static int ncursesw_interface_screen_height = -1;
 static int ncursesw_interface_screen_width = -1;
 //static uint32_t ncursesw_current_colour_code;
@@ -475,7 +473,7 @@ static void print_startup_syntax()
       i18n_ncursesw_COLORS_AVAILABLE);
   streams_latin1_output(": ");
 
-  for (i=0; i<8; i++)
+  for (i=0; i<NOF_Z_COLOURS; i++)
   {
     if (i != 0)
       streams_latin1_output(", ");
@@ -688,26 +686,6 @@ static int parse_config_parameter(char *key, char *value)
 }
 
 
-/*
-static void ncursesw_refresh_screen_size()
-{
-  new_cell_screen_size(ncursesw_interface_screen_height,
-      ncursesw_interface_screen_width);
-}
-*/
-
-
-/*
-static void ncursesw_set_colour(z_colour foreground, z_colour background,
-    int16_t UNUSED(window))
-{
-  if (ncursesw_is_using_colours == true)
-    ncursesw_current_colour_code
-      = (uint16_t)foreground | (((uint16_t)background) << 16);
-}
-*/
-
-
 static int z_to_curses_colour(z_colour z_colour_to_convert,
     int UNUSED(colour_class))
 {
@@ -877,12 +855,47 @@ static short get_color_pair(z_colour z_foreground_colour,
 }
 
 
+static void initialize_colors()
+{
+  start_color();
+
+  // After implementing almost everything and assuming that the color pair
+  // #0 always has the default colors (and running into strange problems)
+  // I found the following note: "Note that color-pair 0 is reserved for
+  // use by curses and should not be changed or used in application programs."
+  // Thus, color pair 0 is not used here and the number of availiable colors
+  // is set to COLOR_PAIRS - 1.
+  //n_color_pairs_availabe = COLOR_PAIRS;
+  n_color_pairs_availabe = COLOR_PAIRS - 1;
+
+  if (n_color_pairs_availabe > 121)
+    n_color_pairs_availabe = 121;
+
+  TRACE_LOG("%d color pairs are availiable.\n", n_color_pairs_availabe);
+
+  if (n_color_pairs_availabe < 121)
+  {
+    // In case not all color combinations are available, we'll have to
+    // keep track when the colors were used last.
+    color_pair_usage
+      = (short*)fizmo_malloc(sizeof(short) * n_color_pairs_availabe);
+    color_pair_usage[0] = 0;
+  }
+
+  n_color_pairs_in_use = 0;
+  color_initialized = true;
+}
+
+
 static void set_colour(z_colour foreground, z_colour background)
 {
   short color_pair_number;
   //attr_t attrs;
 
   TRACE_LOG("new colors: %d, %d\n", foreground, background);
+
+  if (color_initialized == false)
+    initialize_colors();
 
   if ((color_pair_number = get_color_pair(foreground, background))
       == -1)
@@ -946,104 +959,12 @@ static void display_X11_image_window(int image_no)
 
 static void link_interface_to_story(struct z_story *UNUSED(story))
 {
-  //int bytes_to_allocate;
-  //short foreground;
-  //short background;
-  //int i;
   int flags;
 
   initscr();
-  //scrollok(stdscr, FALSE);
   keypad(stdscr, TRUE);
-
-  if (active_interface->is_colour_available() == true)
-  {
-    TRACE_LOG("The has_colors() function reports color is availiable.\n");
-
-    // From "man curs_color":
-    // "curses support color attributes on terminals with that capability. To
-    // use these routines start_color must be called, usually right after
-    // initscr.
-    start_color();
-
-    /*
-    // At this point we'll ensure the default color is set (this
-    // should be the case anyway).
-    if (attron(COLOR_PAIR(0)) == ERR)
-      i18n_translate_and_exit(
-          fizmo_ncursesw_module_name,
-          i18n_ncursesw_FUNCTION_CALL_P0S_ABORTED_DUE_TO_ERROR,
-          -0x201c,
-          "wattron");
-
-    pair_content(0, &foreground, &background);
-
-    TRACE_LOG("pair-content 0: %d, %d.\n", foreground, background);
-
-    ncursesw_interface_default_foreground_colour
-      = ncursesw_custom_foreground_colour != Z_COLOUR_UNDEFINED
-      ? ncursesw_custom_foreground_colour
-      : ncursesw_curses_to_z_colour(foreground);
-
-    ncursesw_interface_default_background_colour
-      = ncursesw_custom_background_colour != Z_COLOUR_UNDEFINED
-      ? ncursesw_custom_background_colour
-      : ncursesw_curses_to_z_colour(background);
-
-    ncursesw_current_foreground_colour
-      = ncursesw_interface_default_foreground_colour;
-    ncursesw_current_background_colour
-      = ncursesw_interface_default_background_colour;
-
-    ncursesw_set_colour(
-        ncursesw_interface_default_foreground_colour,
-        ncursesw_interface_default_foreground_colour,
-        -1);
-
-    TRACE_LOG("curses default foreground color: %d.\n",
-        ncursesw_interface_default_foreground_colour);
-
-    TRACE_LOG("curses default background color: %d.\n",
-        ncursesw_interface_default_background_colour);
-    */
-
-    // After implementing almost everything and assuming that the color pair
-    // #0 always has the default colors (and running into strange problems)
-    // I found the following note: "Note that color-pair 0 is reserved for
-    // use by curses and should not be changed or used in application programs."
-    // Thus, color pair 0 is not used here and the number of availiable colors
-    // is set to COLOR_PAIRS - 1.
-    //n_color_pairs_availabe = COLOR_PAIRS;
-    n_color_pairs_availabe = COLOR_PAIRS - 1;
-
-    if (n_color_pairs_availabe > 121)
-      n_color_pairs_availabe = 121;
-
-    TRACE_LOG("%d color pairs are availiable.\n", n_color_pairs_availabe);
-
-    if (n_color_pairs_availabe < 121)
-    {
-      // In case not all color combinations are available, we'll have to
-      // keep track when the colors were used last.
-      color_pair_usage
-        = (short*)fizmo_malloc(sizeof(short) * n_color_pairs_availabe);
-      color_pair_usage[0] = 0;
-    }
-
-    n_color_pairs_in_use = 0;
-    ncursesw_is_using_colours = true;
-
-    //set_colour(default_foreground_colour, default_background_colour);
-  }
-  else
-  {
-    TRACE_LOG("The has_colors() function reports color is not availiable.\n");
-    ncursesw_is_using_colours = false;
-  }
-
   cbreak();
   noecho();
-  //curs_set(1);
 
   // Create a new signalling pipe. This pipe is used by a select call to
   // detect an incoming time-signal for the input routine.
@@ -1714,7 +1635,7 @@ static char *select_story_from_menu(char *fizmo_dir)
           infowin_output_wordwrapper,
           x - storywin_width - storywin_x - 9);
 
-      if (active_interface->is_colour_available() == true)
+      if (has_colors() == true)
       {
         start_color();
 
@@ -2097,8 +2018,6 @@ int main(int argc, char *argv[])
 
   current_locale = setlocale(LC_ALL, "");
 
-  initscr(); // to allow cellif to invoke is_colour_available which in turn
-             // calls "has_colours" which won't work without initscr().
   fizmo_register_screen_cell_interface(&ncursesw_interface);
 
 #ifdef SOUND_INTERFACE_STRUCT_NAME
