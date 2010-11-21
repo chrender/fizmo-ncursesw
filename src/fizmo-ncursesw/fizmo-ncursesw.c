@@ -416,7 +416,6 @@ static void print_startup_syntax()
 {
   int i;
   char **available_locales = get_available_locale_names();
-  endwin();
 
   streams_latin1_output("\n");
   i18n_translate(
