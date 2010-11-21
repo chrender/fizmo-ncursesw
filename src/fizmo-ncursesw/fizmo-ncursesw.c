@@ -104,8 +104,6 @@ static char output_char_buf[NCURSESW_OUTPUT_CHAR_BUF_SIZE];
 //static z_colour ncursesw_custom_background_colour = Z_COLOUR_UNDEFINED;
 //static z_colour ncursesw_current_foreground_colour = Z_COLOUR_UNDEFINED;
 //static z_colour ncursesw_current_background_colour = Z_COLOUR_UNDEFINED;
-//static z_colour default_foreground_colour = Z_COLOUR_WHITE;
-//static z_colour default_background_colour = Z_COLOUR_BLACK;
 //static z_colour ncursesw_interface_default_foreground_colour = -1;
 //static z_colour ncursesw_interface_default_background_colour = -1;
 static bool ncursesw_interface_open = false;
@@ -268,7 +266,7 @@ static short color_name_to_curses_colour(char *colour_name)
 */
 
 
-static z_colour ncursesw_curses_to_z_colour(short curses_color)
+static z_colour curses_to_z_colour(short curses_color)
 {
   switch (curses_color)
   {
@@ -715,8 +713,8 @@ static void dump_col_usage()
     pair = color_pair_usage[j];
     pair_content(pair, &pair_foreground, &pair_background);
     TRACE_LOG("col-usage[%02d]: %d, %d/%d\n", j, pair,
-        ncursesw_curses_to_z_colour(pair_foreground),
-        ncursesw_curses_to_z_colour(pair_background));
+        curses_to_z_colour(pair_foreground),
+        curses_to_z_colour(pair_background));
   }
 }
 
@@ -1533,7 +1531,7 @@ static struct z_screen_cell_interface ncursesw_interface =
 
 static char *select_story_from_menu(char *fizmo_dir)
 {
-  z_colour foreground, background;
+  //z_colour foreground, background;
   int input;
   int storywin_height = -1;
   int storywin_width = -1;
@@ -1559,6 +1557,8 @@ static char *select_story_from_menu(char *fizmo_dir)
   int bytes_read;
   int new_signal;
   z_ucs *ptr;
+  attr_t attrs;
+  short menucolorpair;
 
   story_list
     = dont_update_story_list_on_start != true
@@ -1615,6 +1615,16 @@ static char *select_story_from_menu(char *fizmo_dir)
       noecho();
       keypad(stdscr, true);
 
+      if (has_colors() == true)
+      {
+        start_color();
+        set_colour(default_foreground_colour, default_background_colour);
+        attr_get(&attrs, &menucolorpair, NULL);
+        TRACE_LOG("Current color pair %d.\n", menucolorpair);
+        bkgdset(' ' | COLOR_PAIR(menucolorpair));
+        bkgd(' ' | COLOR_PAIR(menucolorpair));
+      }
+
       getmaxyx(stdscr, y, x);
       storywin_height = y - 5;
 
@@ -1625,56 +1635,16 @@ static char *select_story_from_menu(char *fizmo_dir)
       infowin_width = x - storywin_width - storywin_x - 9;
       infowin_topindex = 0;
 
-      infowin = newwin(
+      infowin = subwin(
+          stdscr,
           infowin_height + 1,
-          infowin_width,
+          infowin_width + 1,
           infowin_y,
           storywin_width + storywin_x + 5);
 
       wordwrap_adjust_line_length(
           infowin_output_wordwrapper,
           x - storywin_width - storywin_x - 9);
-
-      if (has_colors() == true)
-      {
-        start_color();
-
-        if (
-            (default_foreground_colour != Z_COLOUR_UNDEFINED)
-            ||
-            (default_background_colour != Z_COLOUR_UNDEFINED)
-           )
-        {
-          pair_content(0, &foreground, &background);
-
-          if (default_foreground_colour != Z_COLOUR_UNDEFINED)
-            foreground = z_to_curses_colour(
-                default_foreground_colour,
-                NCURSESW_COLOUR_CLASS_FOREGROUND);
-
-          if (default_background_colour != Z_COLOUR_UNDEFINED)
-            background = z_to_curses_colour(
-                default_background_colour,
-                NCURSESW_COLOUR_CLASS_BACKGROUND);
-
-          if (init_pair(1, foreground, background) == ERR)
-            i18n_translate_and_exit(
-                fizmo_ncursesw_module_name,
-                i18n_ncursesw_FUNCTION_CALL_P0S_ABORTED_DUE_TO_ERROR,
-                -0x2000,
-                "init_pair");
-
-          if (color_set(1, NULL) == ERR)
-            i18n_translate_and_exit(
-                fizmo_ncursesw_module_name,
-                i18n_ncursesw_FUNCTION_CALL_P0S_ABORTED_DUE_TO_ERROR,
-                -0x2052,
-                "color_set");
-
-          bkgdset(' ' | COLOR_PAIR(1));
-          wbkgdset(infowin, ' ' | COLOR_PAIR(1));
-        }
-      }
 
       perform_init = false;
     }
@@ -1719,12 +1689,19 @@ static char *select_story_from_menu(char *fizmo_dir)
       i++;
     }
 
+    wcolor_set(infowin, menucolorpair, NULL);
     werase(infowin);
+    //wbkgdset(infowin, '_' | PAIR_NUMBER(menucolorpair));
+    //wbkgd(infowin, '_' | PAIR_NUMBER(menucolorpair));
+    //set_colour(default_foreground_colour, default_background_colour);
+    //wbkgd(infowin, ' ' | PAIR_NUMBER(1));
+    //wcolor_set(infowin, PAIR_NUMBER(colorpair), NULL);
     entry = story_list->entries[selected];
 
     wattrset(infowin, A_BOLD);
+    wcolor_set(infowin, menucolorpair, NULL);
     wprintw(infowin, "%s\n", entry->title);
-    wattrset(infowin, A_NORMAL);
+    wattrset(infowin, A_NORMAL | COLOR_PAIR(menucolorpair));
 
     wprintw(infowin, "By: %s\n", entry->author);
 
@@ -1769,7 +1746,7 @@ static char *select_story_from_menu(char *fizmo_dir)
     wordwrap_flush_output(infowin_output_wordwrapper);
 
     refresh();
-    wrefresh(infowin);
+    //wrefresh(infowin);
 
     max_filedes_number_plus_1
       = (STDIN_FILENO < ncursesw_if_signalling_pipe[0]
