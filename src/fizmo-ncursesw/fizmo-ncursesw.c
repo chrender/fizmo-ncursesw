@@ -467,6 +467,14 @@ static void print_startup_syntax()
 
   i18n_translate(
       fizmo_ncursesw_module_name,
+      i18n_ncursesw_LOCALE_SEARCH_PATH);
+  streams_latin1_output(": ");
+  streams_latin1_output(
+      get_i18n_default_search_path());
+  streams_latin1_output(".\n");
+
+  i18n_translate(
+      fizmo_ncursesw_module_name,
       i18n_ncursesw_COLORS_AVAILABLE);
   streams_latin1_output(": ");
 
@@ -664,6 +672,7 @@ static int parse_config_parameter(char *key, char *value)
     else
       return -1;
   }
+  /*
   else if (strcasecmp(key, "dont-update-story-list") == 0)
   {
     if (value == NULL)
@@ -676,6 +685,7 @@ static int parse_config_parameter(char *key, char *value)
     else
       return -1;
   }
+  */
   else
   {
     return -2;
@@ -1668,7 +1678,8 @@ static char *select_story_from_menu(char *fizmo_dir)
     erase();
 
     attrset(A_BOLD);
-    mvprintw(1, storywin_x + 7, "fizmo Z-Machine interpreter, Version %s\n",
+    mvprintw(1, storywin_x + 7,
+        "fizmo-ncursesw Z-Machine interpreter, Version %s\n",
         FIZMO_NCURSESW_VERSION);
     attrset(A_NORMAL);
 
