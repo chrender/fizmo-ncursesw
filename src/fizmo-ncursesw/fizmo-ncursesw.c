@@ -1558,7 +1558,8 @@ static char *select_story_from_menu(char *fizmo_dir)
   int new_signal;
   z_ucs *ptr;
   attr_t attrs;
-  short menucolorpair;
+  short menucolorpair = -1;
+  char *config_enablecolor, *config_disablecolor;
 
   story_list
     = dont_update_story_list_on_start != true
@@ -1615,7 +1616,21 @@ static char *select_story_from_menu(char *fizmo_dir)
       noecho();
       keypad(stdscr, true);
 
-      if (has_colors() == true)
+      config_enablecolor = get_configuration_value("enable-color");
+      config_disablecolor = get_configuration_value("disable-color");
+      if (
+          // Either if configuration tell us to fore-enable color,
+          ( (config_enablecolor != NULL)
+            && (strcasecmp(config_enablecolor, "true") == 0) )
+          ||
+          // Or if color is available and not disabled by user,
+          (
+           (has_colors() == true)
+           &&
+           ( (config_disablecolor== NULL)
+             || (strcasecmp(config_disablecolor, "true") != 0) )
+          )
+         )
       {
         start_color();
         set_colour(default_foreground_colour, default_background_colour);
@@ -1624,6 +1639,8 @@ static char *select_story_from_menu(char *fizmo_dir)
         bkgdset(' ' | COLOR_PAIR(menucolorpair));
         bkgd(' ' | COLOR_PAIR(menucolorpair));
       }
+      else
+        menucolorpair = -1;
 
       getmaxyx(stdscr, y, x);
       storywin_height = y - 5;
@@ -1689,19 +1706,14 @@ static char *select_story_from_menu(char *fizmo_dir)
       i++;
     }
 
-    wcolor_set(infowin, menucolorpair, NULL);
+    if (menucolorpair != -1)
+      wcolor_set(infowin, menucolorpair, NULL);
     werase(infowin);
-    //wbkgdset(infowin, '_' | PAIR_NUMBER(menucolorpair));
-    //wbkgd(infowin, '_' | PAIR_NUMBER(menucolorpair));
-    //set_colour(default_foreground_colour, default_background_colour);
-    //wbkgd(infowin, ' ' | PAIR_NUMBER(1));
-    //wcolor_set(infowin, PAIR_NUMBER(colorpair), NULL);
     entry = story_list->entries[selected];
 
     wattrset(infowin, A_BOLD);
-    wcolor_set(infowin, menucolorpair, NULL);
     wprintw(infowin, "%s\n", entry->title);
-    wattrset(infowin, A_NORMAL | COLOR_PAIR(menucolorpair));
+    wattrset(infowin, A_NORMAL);
 
     wprintw(infowin, "By: %s\n", entry->author);
 
