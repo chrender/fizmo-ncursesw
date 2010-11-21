@@ -81,6 +81,7 @@
 #define i18n_ncursesw_FUNCTION_CALL_MALLOC_P0D_RETURNED_NULL_PROBABLY_OUT_OF_MEMORY 45
 #define i18n_ncursesw_FIZMO_NCURSESW_VERSION_P0S 46
 #define i18n_ncursesw_LIBCELLINTERFACE_VERSION_P0S 47
+#define i18n_ncursesw_LOCALE_SEARCH_PATH 48
 
 extern z_ucs fizmo_ncursesw_module_name[];
 
