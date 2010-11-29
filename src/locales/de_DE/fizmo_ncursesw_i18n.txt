@@ -37,7 +37,7 @@ Verzeichnis rekursiv nach Story-Files durchsuchen.
 Aufzeichen von Kommandos aktivieren.
 Spiel mit Eingabe aus Datei beginnen.
 Story-Liste aktualisieren.
-Berechenbaren Zufallsgenerator erzwingen.
+Zufallsgenerator im zufälligen Modus starten.
 Transcript-Datei immer sofort speichern.
 Funtionsaufruf „\{0s}“ aufgrund eines Fehlers abgebrochen.
 Funtionsaufruf „\{0s}“ führte zu Fehlercode \{1d}: „\{2s}“.
@@ -47,3 +47,4 @@ Funktionsaufruf von malloc(\{0d}) lieferte NULL, wahrscheinlich verursacht durch
 fizmo-ncursesw version \{0s}.
 libcellinterface version \{0s}.
 Lokalisierungsdaten-Suchpfad
+Dateiname, von dem Kommandos gelesen werden.

@@ -72,7 +72,7 @@
 #define i18n_ncursesw_START_GAME_WITH_RECORDING_COMMANDS 36
 #define i18n_ncursesw_START_GAME_WITH_INPUT_FROM_FILE 37
 #define i18n_ncursesw_UPDATE_STORY_LIST_ON_START 38
-#define i18n_ncursesw_FORCE_RANDOM_GENERATOR_IN_PREDICTABLE_MODE 39
+#define i18n_ncursesw_START_WITH_RANDOM_GENERATOR_IN_RANDOM_MODE 39
 #define i18n_ncursesw_SYNC_TRANSCRIPT 40
 #define i18n_ncursesw_FUNCTION_CALL_P0S_ABORTED_DUE_TO_ERROR 41
 #define i18n_ncursesw_FUNCTION_CALL_P0S_RETURNED_ERROR_P1D_P2S 42
@@ -82,6 +82,7 @@
 #define i18n_ncursesw_FIZMO_NCURSESW_VERSION_P0S 46
 #define i18n_ncursesw_LIBCELLINTERFACE_VERSION_P0S 47
 #define i18n_ncursesw_LOCALE_SEARCH_PATH 48
+#define i18n_ncursesw_FILENAME_TO_READ_COMMANDS_FROM 49
 
 extern z_ucs fizmo_ncursesw_module_name[];
 

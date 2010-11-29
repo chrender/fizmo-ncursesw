@@ -37,7 +37,7 @@ Recursively search directory for story files.
 Start recording commands when game starts.
 Start game with input from file.
 Update story list.
-Force random generator in predictable mode.
+Start with random generator in random mode.
 Always write transcript directly through to disk.
 Function call "\{0s}" aborted due to error.
 Function call "\{0s}" resulted in error \{1d}: "\{2s}".
@@ -47,3 +47,4 @@ Function call malloc(\{0d}) returned null, probably out of memory.
 fizmo-ncursesw version \{0s}.
 libcellinterface version \{0s}.
 Locale search path
+Filename to read commands from.
