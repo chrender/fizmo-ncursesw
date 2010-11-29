@@ -81,7 +81,7 @@ static int ncursesw_if_signalling_pipe[2];
 static struct sigaction default_sigaction;
 static struct itimerval timerval;
 static struct itimerval empty_timerval;
-static bool use_xterm_title = false;
+static bool use_xterm_title = true;
 //static char *fizmo_locale = DEFAULT_LOCALE;
 static int ncursesw_argc;
 static char **ncursesw_argv;
@@ -253,14 +253,14 @@ static short color_name_to_curses_colour(char *colour_name)
 {
   // Keep in sync with char* z_colour_names[] at the top.
 
-  if      (strcasecmp(colour_name, "black") == 0)   { return COLOR_BLACK;   }
-  else if (strcasecmp(colour_name, "red") == 0)     { return COLOR_RED;     }
-  else if (strcasecmp(colour_name, "green") == 0)   { return COLOR_GREEN;   }
-  else if (strcasecmp(colour_name, "yellow") == 0)  { return COLOR_YELLOW;  }
-  else if (strcasecmp(colour_name, "blue") == 0)    { return COLOR_BLUE;    }
-  else if (strcasecmp(colour_name, "magenta") == 0) { return COLOR_MAGENTA; }
-  else if (strcasecmp(colour_name, "cyan") == 0)    { return COLOR_CYAN;    }
-  else if (strcasecmp(colour_name, "white") == 0)   { return COLOR_WHITE;   }
+  if      (strcmp(colour_name, "black") == 0)   { return COLOR_BLACK;   }
+  else if (strcmp(colour_name, "red") == 0)     { return COLOR_RED;     }
+  else if (strcmp(colour_name, "green") == 0)   { return COLOR_GREEN;   }
+  else if (strcmp(colour_name, "yellow") == 0)  { return COLOR_YELLOW;  }
+  else if (strcmp(colour_name, "blue") == 0)    { return COLOR_BLUE;    }
+  else if (strcmp(colour_name, "magenta") == 0) { return COLOR_MAGENTA; }
+  else if (strcmp(colour_name, "cyan") == 0)    { return COLOR_CYAN;    }
+  else if (strcmp(colour_name, "white") == 0)   { return COLOR_WHITE;   }
   else                                              { return -1;            }
 }
 */
@@ -663,34 +663,31 @@ static void print_startup_syntax()
 
 static int parse_config_parameter(char *key, char *value)
 {
-  if (strcasecmp(key, "enable-xterm-title") == 0)
+  if (strcmp(key, "enable-xterm-title") == 0)
   {
-    if (value == NULL)
-      return -1;
-    else if ((strcasecmp(value, "true")==0) || (strcasecmp(value, "yes")==0))
-    {
+    if (
+        (value == NULL)
+        ||
+        (*value == 0)
+        ||
+        (strcmp(value, true_value) == 0)
+       )
       use_xterm_title = true;
-      return 0;
-    }
-    else if ((strcasecmp(value, "false")==0) || (strcasecmp(value, "no")==0))
-    {
+    else
       use_xterm_title = false;
-      return 0;
-    }
-    else
-      return -1;
+    return 0;
   }
-  else if (strcasecmp(key, "dont-update-story-list") == 0)
+  else if (strcmp(key, "dont-update-story-list") == 0)
   {
-    if (value == NULL)
-      return -1;
-    else if ((strcasecmp(value, "true")==0) || (strcasecmp(value, "yes")==0))
-    {
+    if (
+        (value == NULL)
+        ||
+        (*value == 0)
+        ||
+        (strcmp(value, true_value) == 0)
+       )
       dont_update_story_list_on_start = true;
-      return 0;
-    }
-    else
-      return -1;
+    return 0;
   }
   else
   {
@@ -1013,6 +1010,13 @@ static void link_interface_to_story(struct z_story *UNUSED(story))
 
   ncursesw_interface_open = true;
 
+  if (
+      (active_z_story->title != NULL)
+      &&
+      (use_xterm_title == true)
+     )
+    printf("%c]0;%s%c", 033, active_z_story->title, 007);
+
 #ifdef ENABLE_X11_IMAGES
   if (active_z_story->frontispiece_image_no >= 0)
     display_X11_image_window(active_z_story->frontispiece_image_no);
@@ -1051,6 +1055,9 @@ static int ncursw_close_interface(z_ucs *error_message)
       ncursesw_fputws(wchar_t_buf, stderr);
     }
   }
+
+  if (use_xterm_title == true)
+    printf("%c]0;%c", 033, 007);
 
   return 0;
 }
@@ -1258,6 +1265,10 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
         {
           if (input == 127)
             result = EVENT_WAS_CODE_BACKSPACE;
+          else if (input == 1)
+            result = EVENT_WAS_CODE_CTRL_A;
+          else if (input == 5)
+            result = EVENT_WAS_CODE_CTRL_E;
           else
           {
             result = EVENT_WAS_INPUT;
@@ -1363,6 +1374,8 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
   }
 
   sigaction(SIGWINCH, NULL, NULL);
+
+  TRACE_LOG("result %d.\n", result);
 
   return result;
 }
@@ -1636,14 +1649,14 @@ static char *select_story_from_menu(char *fizmo_dir)
       if (
           // Either if configuration tell us to fore-enable color,
           ( (config_enablecolor != NULL)
-            && (strcasecmp(config_enablecolor, "true") == 0) )
+            && (strcmp(config_enablecolor, "true") == 0) )
           ||
           // Or if color is available and not disabled by user,
           (
            (has_colors() == true)
            &&
            ( (config_disablecolor== NULL)
-             || (strcasecmp(config_disablecolor, "true") != 0) )
+             || (strcmp(config_disablecolor, "true") != 0) )
           )
          )
       {
@@ -1918,14 +1931,14 @@ static int ncursesw_parse_config_parameter(char *key, char *value)
   //short color;
   //int int_value;
 
-  if (strcasecmp(key, "bold-for-bright-foreground") == 0)
+  if (strcmp(key, "bold-for-bright-foreground") == 0)
   {
     if ( (value != NULL) && (strcmp(value, "") != 0) )
       use_bold_for_bright_foreground = true;
 
     return 0;
   }
-  else if (strcasecmp(key, "blink-for-bright-background") == 0)
+  else if (strcmp(key, "blink-for-bright-background") == 0)
   {
     if ( (value != NULL) && (strcmp(value, "") != 0) )
       use_blink_for_bright_background = true;
@@ -1933,7 +1946,7 @@ static int ncursesw_parse_config_parameter(char *key, char *value)
     return 0;
   }
 #ifdef ENABLE_X11_IMAGES
-  else if (strcasecmp(key, "enable-xterm-graphics") == 0)
+  else if (strcmp(key, "enable-xterm-graphics") == 0)
   {
    if ( (value != NULL) && (strcmp(value, "") != 0) )
       enable_x11_graphics = true;
@@ -1941,14 +1954,14 @@ static int ncursesw_parse_config_parameter(char *key, char *value)
     return 0;
   }
 #endif
-  else if (strcasecmp(key, "dont-update-story-list") == 0)
+  else if (strcmp(key, "dont-update-story-list") == 0)
   {
     if ( (value != NULL) && (strcmp(value, "") != 0) )
       dont_update_story_list_on_start = true;
 
     return 0;
   }
-  else if (strcasecmp(key, "enable-xterm-title") == 0)
+  else if (strcmp(key, "enable-xterm-title") == 0)
   {
     if ( (value != NULL) && (strcmp(value, "") != 0) )
       use_xterm_title = true;
@@ -2156,11 +2169,6 @@ int main(int argc, char *argv[])
         print_startup_syntax();
         exit(EXIT_FAILURE);
       }
-      else if (parse_config_parameter("background-color", argv[argi]) != 0)
-      {
-        print_startup_syntax();
-        exit(EXIT_FAILURE);
-      }
       else if (set_configuration_value("background-color", argv[argi]) != 0)
         exit(EXIT_FAILURE);
       argi++;
@@ -2170,11 +2178,6 @@ int main(int argc, char *argv[])
         || (strcmp(argv[argi], "--foreground-color") == 0) )
     {
       if (++argi == argc)
-      {
-        print_startup_syntax();
-        exit(EXIT_FAILURE);
-      }
-      else if (parse_config_parameter("foreground-color", argv[argi]) != 0)
       {
         print_startup_syntax();
         exit(EXIT_FAILURE);
@@ -2214,13 +2217,17 @@ int main(int argc, char *argv[])
         (strcmp(argv[argi], "-nc") == 0)
         || (strcmp(argv[argi], "--dont-use-colors: ") == 0) )
     {
+      set_configuration_value("enable-color", "false");
       set_configuration_value("disable-color", "true");
+      argi ++;
     }
     else if (
         (strcmp(argv[argi], "-ec") == 0)
         || (strcmp(argv[argi], "--enable-colors: ") == 0) )
     {
+      set_configuration_value("disable-color", "false");
       set_configuration_value("enable-color", "true");
+      argi ++;
     }
 #ifdef ENABLE_X11_IMAGES
     else if (
