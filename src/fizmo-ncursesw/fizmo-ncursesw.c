@@ -82,7 +82,7 @@ static struct sigaction default_sigaction;
 static struct itimerval timerval;
 static struct itimerval empty_timerval;
 static bool use_xterm_title = false;
-static char *fizmo_locale = DEFAULT_LOCALE;
+//static char *fizmo_locale = DEFAULT_LOCALE;
 static int ncursesw_argc;
 static char **ncursesw_argv;
 static bool use_bold_for_bright_foreground = false;
@@ -497,16 +497,16 @@ static void print_startup_syntax()
       i18n_ncursesw_SET_LOCALE_NAME_FOR_INTERPRETER_MESSAGES);
   streams_latin1_output("\n");
 
-  streams_latin1_output( " -p,  --predictable: ");
+  streams_latin1_output( " -pr, --predictable: ");
   i18n_translate(
       fizmo_ncursesw_module_name,
       i18n_ncursesw_START_WITH_RANDOM_GENERATOR_IN_PREDICTABLE_MODE);
   streams_latin1_output("\n");
 
-  streams_latin1_output( " -fp, --force-predictable: ");
+  streams_latin1_output( " -ra, --random: ");
   i18n_translate(
       fizmo_ncursesw_module_name,
-      i18n_ncursesw_FORCE_RANDOM_GENERATOR_IN_PREDICTABLE_MODE);
+      i18n_ncursesw_START_WITH_RANDOM_GENERATOR_IN_RANDOM_MODE);
   streams_latin1_output("\n");
 
   streams_latin1_output( " -st, --start-transcript: ");
@@ -521,10 +521,16 @@ static void print_startup_syntax()
       i18n_ncursesw_START_GAME_WITH_RECORDING_COMMANDS);
   streams_latin1_output("\n");
 
-  streams_latin1_output( " -if, --input-file: ");
+  streams_latin1_output( " -fi, --start-file-input: ");
   i18n_translate(
       fizmo_ncursesw_module_name,
       i18n_ncursesw_START_GAME_WITH_INPUT_FROM_FILE);
+  streams_latin1_output("\n");
+
+  streams_latin1_output( " -if, --input-filename: ");
+  i18n_translate(
+      fizmo_ncursesw_module_name,
+      i18n_ncursesw_FILENAME_TO_READ_COMMANDS_FROM);
   streams_latin1_output("\n");
 
   streams_latin1_output( " -f,  --foreground-color: ");
@@ -593,11 +599,13 @@ static void print_startup_syntax()
       i18n_ncursesw_USE_XTERM_TITLE);
   streams_latin1_output("\n");
 
+  /*
   streams_latin1_output( " -s8, --force-8bit-sound: ");
   i18n_translate(
       fizmo_ncursesw_module_name,
       i18n_ncursesw_FORCE_8BIT_SOUND);
   streams_latin1_output("\n");
+  */
 
   streams_latin1_output( " -ds, --disable-sound: ");
   i18n_translate(
@@ -672,7 +680,6 @@ static int parse_config_parameter(char *key, char *value)
     else
       return -1;
   }
-  /*
   else if (strcasecmp(key, "dont-update-story-list") == 0)
   {
     if (value == NULL)
@@ -685,7 +692,6 @@ static int parse_config_parameter(char *key, char *value)
     else
       return -1;
   }
-  */
   else
   {
     return -2;
@@ -2076,16 +2082,42 @@ int main(int argc, char *argv[])
 
   while (argi < argc)
   {
-    if ((strcmp(argv[argi], "-p") == 0)
+    if ((strcmp(argv[argi], "-l") == 0)
+        || (strcmp(argv[argi], "--set-locale") == 0))
+    {
+      if (++argi == argc)
+      {
+        print_startup_syntax();
+        exit(EXIT_FAILURE);
+      }
+
+      if (set_current_locale_name(argv[argi]) != 0)
+      {
+        streams_latin1_output("\n");
+
+        i18n_translate(
+            fizmo_ncursesw_module_name,
+            i18n_ncursesw_INVALID_CONFIGURATION_VALUE_P0S_FOR_P1S,
+            argv[argi],
+            "locale");
+
+        streams_latin1_output("\n");
+
+        print_startup_syntax();
+        exit(EXIT_FAILURE);
+      }
+      argi++;
+    }
+    else if ((strcmp(argv[argi], "-pr") == 0)
         || (strcmp(argv[argi], "--predictable") == 0))
     {
       set_configuration_value("random-mode", "predictable");
       argi += 1;
     }
-    else if ((strcmp(argv[argi], "-fp") == 0)
-        || (strcmp(argv[argi], "--force-predictable") == 0))
+    else if ((strcmp(argv[argi], "-ra") == 0)
+        || (strcmp(argv[argi], "--random") == 0))
     {
-      set_configuration_value("random-mode", "force-predictable");
+      set_configuration_value("random-mode", "random");
       argi += 1;
     }
     else if ((strcmp(argv[argi], "-st") == 0)
@@ -2101,81 +2133,55 @@ int main(int argc, char *argv[])
           "start-command-recording-when-story-starts", "true");
       argi += 1;
     }
-    else if ((strcmp(argv[argi], "-if") == 0)
-        || (strcmp(argv[argi], "--input-file") == 0))
+    else if ((strcmp(argv[argi], "-fi") == 0)
+        || (strcmp(argv[argi], "--start-file-input") == 0))
     {
       set_configuration_value(
           "start-file-input-when-story-starts", "true");
       argi += 1;
     }
-    else if ((strcmp(argv[argi], "-l") == 0)
-        || (strcmp(argv[argi], "--set-locale") == 0))
+    else if ((strcmp(argv[argi], "-if") == 0)
+        || (strcmp(argv[argi], "--input-filename") == 0))
+    {
+      set_configuration_value(
+          "command-filename", argv[argi]);
+      argi += 1;
+    }
+    else if (
+        (strcmp(argv[argi], "-b") == 0)
+        || (strcmp(argv[argi], "--background-color") == 0) )
     {
       if (++argi == argc)
       {
-        return -1;
-      }
-
-      /*
-      if (set_configuration_value("locale", argv[argi], "fizmo") == -1)
-      {
-        streams_latin1_output("\n");
-
-        //set_configuration_value(
-            //"locale", get_configuration_value("locale"), "ncursesw");
-
-        i18n_translate(
-            fizmo_ncursesw_module_name,
-            i18n_ncursesw_INVALID_CONFIGURATION_VALUE_P0S_FOR_P1S,
-            argv[argi],
-            "locale");
-
-        //set_configuration_value(
-            //"locale", get_configuration_value("locale"), "fizmo");
-
-        streams_latin1_output("\n");
-
         print_startup_syntax();
         exit(EXIT_FAILURE);
       }
-      else
+      else if (parse_config_parameter("background-color", argv[argi]) != 0)
       {
-        fizmo_locale = argv[argi];
-        argi++;
+        print_startup_syntax();
+        exit(EXIT_FAILURE);
       }
-      */
+      else if (set_configuration_value("background-color", argv[argi]) != 0)
+        exit(EXIT_FAILURE);
+      argi++;
     }
     else if (
-        (
-         (strcmp(argv[argi], "-b") == 0)
-         ||
-         (strcmp(argv[argi], "--background-color") == 0)
-        )
-        &&
-        (argi+1 < argc)
-        )
+        (strcmp(argv[argi], "-f") == 0)
+        || (strcmp(argv[argi], "--foreground-color") == 0) )
     {
-      if (parse_config_parameter("background-color", argv[argi+1])
-          != 0)
+      if (++argi == argc)
+      {
+        print_startup_syntax();
         exit(EXIT_FAILURE);
-
-      argi += 2;
-    }
-    else if (
-        (
-         (strcmp(argv[argi], "-f") == 0)
-         ||
-         (strcmp(argv[argi], "--foreground-color") == 0)
-        )
-        &&
-        (argi+1 < argc)
-        )
-    {
-      if (parse_config_parameter("foreground-color", argv[argi+1])
-          != 0)
+      }
+      else if (parse_config_parameter("foreground-color", argv[argi]) != 0)
+      {
+        print_startup_syntax();
         exit(EXIT_FAILURE);
-
-      argi += 2;
+      }
+      else if (set_configuration_value("foreground-color", argv[argi]) != 0)
+        exit(EXIT_FAILURE);
+      argi++;
     }
     else if (
         (strcmp(argv[argi], "-bf") == 0)
@@ -2201,8 +2207,20 @@ int main(int argc, char *argv[])
         (strcmp(argv[argi], "--umem") == 0)
         )
     {
-      set_configuration_value("force-quetzal-umem", "true");
+      set_configuration_value("quetzal-umem", "true");
       argi ++;
+    }
+    else if (
+        (strcmp(argv[argi], "-nc") == 0)
+        || (strcmp(argv[argi], "--dont-use-colors: ") == 0) )
+    {
+      set_configuration_value("disable-color", "true");
+    }
+    else if (
+        (strcmp(argv[argi], "-ec") == 0)
+        || (strcmp(argv[argi], "--enable-colors: ") == 0) )
+    {
+      set_configuration_value("enable-color", "true");
     }
 #ifdef ENABLE_X11_IMAGES
     else if (
@@ -2224,6 +2242,7 @@ int main(int argc, char *argv[])
       use_xterm_title = true;
       argi++;
     }
+    /*
     else if (
         (strcmp(argv[argi], "-s8") == 0)
         ||
@@ -2232,6 +2251,7 @@ int main(int argc, char *argv[])
       set_configuration_value("force-8bit-sound", "true");
       argi += 1;
     }
+    */
     else if (
         (strcmp(argv[argi], "-ds") == 0)
         ||
@@ -2245,7 +2265,7 @@ int main(int argc, char *argv[])
         ||
         (strcmp(argv[argi], "--set-tandy-flag") == 0))
     {
-      set_configuration_value("set-tandy-bit", "true");
+      set_configuration_value("set-tandy-flag", "true");
       argi += 1;
     }
     else if (
@@ -2272,21 +2292,11 @@ int main(int argc, char *argv[])
           (int_value < 0)
          )
       {
-        /*
-        set_configuration_value(
-            "locale", get_configuration_value("locale"), "ncursesw");
-        */
-
         i18n_translate(
             fizmo_ncursesw_module_name,
             i18n_ncursesw_INVALID_CONFIGURATION_VALUE_P0S_FOR_P1S,
             argv[argi],
             argv[argi - 1]);
-
-        /*
-        set_configuration_value(
-            "locale", get_configuration_value("locale"), "fizmo");
-        */
 
         streams_latin1_output("\n");
 
