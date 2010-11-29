@@ -11,7 +11,6 @@ Starte Spiel mit aktiviertem Transcript.
 libfizmo version \{0s}.
 Verfügbare Sprachen:
 Weiter
-Drücken Sie eine Taste zum Beenden.
 Punkte
 Züge
 Anzahl der verfügbaren Farbkombinationen: \{0d}.
