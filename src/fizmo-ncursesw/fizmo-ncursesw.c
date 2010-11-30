@@ -273,6 +273,7 @@ static short color_name_to_curses_colour(char *colour_name)
 */
 
 
+#ifdef ENABLE_TRACING
 static z_colour curses_to_z_colour(short curses_color)
 {
   switch (curses_color)
@@ -289,6 +290,7 @@ static z_colour curses_to_z_colour(short curses_color)
 
   return -1;
 }
+#endif // ENABLE_TRACING
 
 
 static void goto_yx(int y, int x)
