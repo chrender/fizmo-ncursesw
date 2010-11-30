@@ -1079,11 +1079,6 @@ static int display_X11_image_window(int image_no)
 
   image_blorb_index = get_image_blorb_index(active_z_story, image_no);
 
-  /*
-  if (x11_display == NULL)
-    init_x11_display();
-    */
-
   fseek(
       active_z_story->blorb_file,
       image_blorb_index->blorb_offset,
