@@ -9,15 +9,11 @@ else
   INSTALL_BIN_DIR = games
 endif
 
-ifneq ($(SOUND_INTERFACE_NAME),)
-  SOUND_IF_FLAGS = SOUND_INTERFACE_NAME="$(SOUND_INTERFACE_NAME)"
-endif
-
 
 all: src/fizmo-ncursesw/fizmo-ncursesw
 
 src/fizmo-ncursesw/fizmo-ncursesw::
-	cd src/fizmo-ncursesw ; make $(SOUND_IF_FLAGS)
+	cd src/fizmo-ncursesw ; make
 
 install: src/fizmo-ncursesw/fizmo-ncursesw
 	mkdir -p $(INSTALL_PREFIX)/$(INSTALL_BIN_DIR)
