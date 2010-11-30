@@ -7,6 +7,10 @@ include $(FIZMO_INC_DIR)/fizmo/libfizmo.mk
 include $(FIZMO_INC_DIR)/fizmo/libcellif.mk
 
 ifneq ($(SOUND_INTERFACE_NAME),)
+  SOUND_IF_FLAGS = SOUND_INTERFACE_NAME="$(SOUND_INTERFACE_NAME)"
+endif
+
+ifneq ($(SOUND_INTERFACE_NAME),)
 include $(FIZMO_INC_DIR)/fizmo/$(SOUND_INTERFACE_NAME).mk
 endif
 
@@ -36,7 +40,11 @@ FLAGS =
 FIZMO_SOUND_INTERFACE = $(SOUND_INTERFACE_STRUCT_NAME)
 
 ifneq ($(ENABLE_X11_IMAGES),)
+include $(FIZMO_INC_DIR)/fizmo/libdrilbo.mk
 FLAGS += -DENABLE_X11_IMAGES
+INC_DIRS += $(DRILBO_INC_DIRS)
+LIB_DIRS += $(DRILBO_LIB_DIRS)
+LIBS += $(DRILBO_LIBS) -ldrilbo
 endif
 
 
