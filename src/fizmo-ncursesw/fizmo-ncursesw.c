@@ -1107,12 +1107,14 @@ static int display_X11_image_window(int image_no)
   env_window_id = getenv("WINDOWID");
   if ( (env_window_id != NULL) && (enable_x11_inline_graphics == true) )
   {
+    curs_set(0);
     window_id = atol(env_window_id);
     setup_x11_callback();
     drilbo_window_id = display_zimage_on_X11(
         &window_id, frontispiece, &x11_callback_func);
     wait_for_x11_callback();
     close_image_window(drilbo_window_id);
+    curs_set(1);
   }
   else
   {     
