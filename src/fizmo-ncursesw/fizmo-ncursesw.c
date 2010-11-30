@@ -66,8 +66,10 @@
 #define FIZMO_NCURSESW_VERSION "0.7.0-b5"
 
 #ifdef ENABLE_X11_IMAGES
-#include "../drilbo/drilbo.h"
-#include "../drilbo/drilbo-x11.h"
+#include <drilbo/drilbo.h>
+#include <drilbo/drilbo-jpeg.h>
+#include <drilbo/drilbo-png.h>
+#include <drilbo/drilbo-x11.h>
 #endif //ENABLE_X11_IMAGES
 
 #define NCURSESW_COLOUR_CLASS_FOREGROUND 0
@@ -128,7 +130,12 @@ static bool timer_active = true;
 
 #ifdef ENABLE_X11_IMAGES
 static z_image *frontispiece;
-static bool enable_x11_graphics = false;
+static bool enable_x11_graphics = true;
+static bool enable_x11_inline_graphics = true;
+static x11_image_window_id drilbo_window_id;
+static int x11_signalling_pipe[2];
+unsigned int x11_read_buf[1];
+fd_set x11_in_fds;
 #endif // ENABLE_X11_IMAGES
 
 /*
@@ -934,9 +941,141 @@ static void set_colour(z_colour foreground, z_colour background)
 
 
 #ifdef ENABLE_X11_IMAGES
-static void display_X11_image_window(int image_no)
+static void x11_callback_func(x11_image_window_id window_id, int event)
+{
+  int ret_val;
+  unsigned char write_buffer = 0;
+
+  // No tracelogs from other thread: Might crash application.
+  //TRACE_LOG("Got X11 callback event %d for image id %d.\n", event, window_id);
+
+  if (drilbo_window_id == window_id)
+  {
+    if (event == DRILBO_IMAGE_WINDOW_CLOSED)
+    {
+      do
+      {
+        ret_val = write(x11_signalling_pipe[1], &write_buffer, 1);
+
+        if ( (ret_val == -1) && (errno != EAGAIN) )
+          return;
+      }
+      while ( (ret_val == -1) && (errno == EAGAIN) );
+    }
+  }
+}
+
+
+static void setup_x11_callback()
+{
+  int flags;
+
+  if (pipe(x11_signalling_pipe) != 0)
+    i18n_translate_and_exit(
+        fizmo_ncursesw_module_name,
+        i18n_ncursesw_FUNCTION_CALL_P0S_RETURNED_ERROR_P1D_P2S,
+        -0x2016,
+        "pipe",
+        errno,
+        strerror(errno));
+
+  if ((flags = fcntl(x11_signalling_pipe[0], F_GETFL, 0)) == -1)
+    i18n_translate_and_exit(
+        fizmo_ncursesw_module_name,
+        i18n_ncursesw_FUNCTION_CALL_P0S_RETURNED_ERROR_P1D_P2S,
+        -0x2018,
+        "fcntl / F_GETFL",
+        errno,
+        strerror(errno));
+
+  if ((fcntl(x11_signalling_pipe[0], F_SETFL, flags|O_NONBLOCK)) == -1)
+    i18n_translate_and_exit(
+        fizmo_ncursesw_module_name,
+        i18n_ncursesw_FUNCTION_CALL_P0S_RETURNED_ERROR_P1D_P2S,
+        -0x2018,
+        "fcntl / F_SETFL",
+        errno,
+        strerror(errno));
+
+  if ((flags = fcntl(STDIN_FILENO, F_GETFL, 0)) == -1)
+    i18n_translate_and_exit(
+        fizmo_ncursesw_module_name,
+        i18n_ncursesw_FUNCTION_CALL_P0S_RETURNED_ERROR_P1D_P2S,
+        -0x2018,
+        "fcntl / F_GETFL",
+        errno,
+        strerror(errno));
+
+  if ((fcntl(STDIN_FILENO, F_SETFL, flags|O_NONBLOCK)) == -1)
+    i18n_translate_and_exit(
+        fizmo_ncursesw_module_name,
+        i18n_ncursesw_FUNCTION_CALL_P0S_RETURNED_ERROR_P1D_P2S,
+        -0x2018,
+        "fcntl / F_SETFL",
+        errno,
+        strerror(errno));
+}
+
+
+int wait_for_x11_callback()
+{
+  int max_filedes_number_plus_1;
+  int select_retval, ret_val;
+
+  for (;;)
+  {
+    FD_ZERO(&x11_in_fds);
+    FD_SET(STDIN_FILENO, &x11_in_fds);
+    FD_SET(x11_signalling_pipe[0], &x11_in_fds);
+
+    max_filedes_number_plus_1
+      = (STDIN_FILENO < x11_signalling_pipe[0]
+          ? x11_signalling_pipe[0]
+          : STDIN_FILENO) + 1;
+
+    select_retval
+      = select(max_filedes_number_plus_1, &x11_in_fds, NULL, NULL, NULL);
+
+    if (select_retval > 0)
+    {
+      if (FD_ISSET(STDIN_FILENO, &x11_in_fds))
+      {
+        do
+        {
+          ret_val = read(STDIN_FILENO, &x11_read_buf, 1);
+        }
+        while (ret_val > 0);
+
+        break;
+      }
+      else if (FD_ISSET(x11_signalling_pipe[0], &x11_in_fds))
+      {
+        do
+        {
+          ret_val = read(x11_signalling_pipe[0], &x11_read_buf, 1);
+
+          if ( (ret_val == -1) && (errno != EAGAIN) )
+          {
+            printf("ret_val:%d\n", ret_val);
+            return -1;
+          }
+        }
+        while ( (ret_val == -1) && (errno == EAGAIN) );
+
+        break;
+      }
+    }
+  }
+
+  return 0;
+}
+
+
+static int display_X11_image_window(int image_no)
 {
   struct z_story_blorb_image *image_blorb_index;
+  char *env_window_id;
+  XID window_id;
 
   image_blorb_index = get_image_blorb_index(active_z_story, image_no);
 
@@ -952,17 +1091,38 @@ static void display_X11_image_window(int image_no)
 
   if (image_blorb_index->type == Z_BLORB_IMAGE_PNG)
   {
-    return;
+    if ((frontispiece = read_zimage_from_png(active_z_story->blorb_file))
+      == NULL)
+      return -1;
   }
   else if (image_blorb_index->type == Z_BLORB_IMAGE_JPEG)
   {
-    return;
+    if ((frontispiece = read_zimage_from_jpeg(active_z_story->blorb_file))
+        == NULL)
+      return -1;
   }
   else
   {
     //FIXME: Quit / Warn of unsupported (undefined?) image type.
-    return;
+    return -2;
   }
+
+  env_window_id = getenv("WINDOWID");
+  if ( (env_window_id != NULL) && (enable_x11_inline_graphics == true) )
+  {
+    window_id = atol(env_window_id);
+    setup_x11_callback();
+    drilbo_window_id = display_zimage_on_X11(
+        &window_id, frontispiece, &x11_callback_func);
+    wait_for_x11_callback();
+    close_image_window(drilbo_window_id);
+  }
+  else
+  {     
+    drilbo_window_id = display_zimage_on_X11(NULL, frontispiece, NULL);
+  }
+
+  return 0;
 }
 #endif // ENABLE_X11_IMAGES
 
@@ -1018,6 +1178,7 @@ static void link_interface_to_story(struct z_story *UNUSED(story))
     printf("%c]0;%s%c", 033, active_z_story->title, 007);
 
 #ifdef ENABLE_X11_IMAGES
+  TRACE_LOG("frontispiece: %d.\n", active_z_story->frontispiece_image_no);
   if (active_z_story->frontispiece_image_no >= 0)
     display_X11_image_window(active_z_story->frontispiece_image_no);
 #endif // ENABLE_X11_IMAGES
