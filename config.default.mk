@@ -6,6 +6,7 @@ AR = ar
 CFLAGS = -Wall -Wextra
 
 SOUND_INTERFACE_NAME = libsndifsdl
+ENABLE_X11_IMAGES = 1
 
 ifneq ($(DESTDIR),)
 INSTALL_PREFIX = $(DESTDIR)
