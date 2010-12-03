@@ -129,10 +129,10 @@ static bool dont_allocate_new_colour_pair = false;
 static bool timer_active = true;
 
 #ifdef ENABLE_X11_IMAGES
-static z_image *frontispiece;
+static z_image *frontispiece = NULL;
 static bool enable_x11_graphics = true;
 static bool enable_x11_inline_graphics = true;
-static x11_image_window_id drilbo_window_id;
+static x11_image_window_id drilbo_window_id = -1;
 static int x11_signalling_pipe[2];
 unsigned int x11_read_buf[1];
 fd_set x11_in_fds;
@@ -1114,6 +1114,7 @@ static int display_X11_image_window(int image_no)
         &window_id, frontispiece, &x11_callback_func);
     wait_for_x11_callback();
     close_image_window(drilbo_window_id);
+    drilbo_window_id = -1;
     curs_set(1);
   }
   else
@@ -1192,6 +1193,19 @@ static void reset_interface()
 static int ncursw_close_interface(z_ucs *error_message)
 {
   z_ucs *ptr;
+
+#ifdef ENABLE_X11_IMAGES
+  if (drilbo_window_id != -1)
+  {
+    close_image_window(drilbo_window_id);
+    drilbo_window_id = -1;
+  }
+  if (frontispiece != NULL)
+  {
+    free_zimage(frontispiece);
+    frontispiece = NULL;
+  }
+#endif // ENABLE_X11_IMAGES
 
   TRACE_LOG("Closing signalling pipes.\n");
 
