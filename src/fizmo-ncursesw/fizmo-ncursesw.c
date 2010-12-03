@@ -686,6 +686,20 @@ static int parse_config_parameter(char *key, char *value)
       use_xterm_title = false;
     return 0;
   }
+  else if (strcmp(key, "display-x11-inline-image") == 0)
+  {
+    if (
+        (value == NULL)
+        ||
+        (*value == 0)
+        ||
+        (strcmp(value, true_value) == 0)
+       )
+      enable_x11_inline_graphics = true;
+    else
+      enable_x11_inline_graphics = false;
+    return 0;
+  }
   else if (strcmp(key, "dont-update-story-list") == 0)
   {
     if (
