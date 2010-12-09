@@ -83,8 +83,7 @@ static int ncursesw_if_signalling_pipe[2];
 static struct sigaction default_sigaction;
 static struct itimerval timerval;
 static struct itimerval empty_timerval;
-static bool use_xterm_title = true;
-//static char *fizmo_locale = DEFAULT_LOCALE;
+static bool use_xterm_title = false;
 static int ncursesw_argc;
 static char **ncursesw_argv;
 static bool use_bold_for_bright_foreground = false;
@@ -102,13 +101,8 @@ static bool infowin_full = false;
 static wchar_t wchar_t_buf[NCURSESW_WCHAR_T_BUF_SIZE];
 static z_ucs z_ucs_t_buf[NCURSESW_Z_UCS_BUF_SIZE];
 static char output_char_buf[NCURSESW_OUTPUT_CHAR_BUF_SIZE];
-//static z_colour ncursesw_custom_foreground_colour = Z_COLOUR_UNDEFINED;
-//static z_colour ncursesw_custom_background_colour = Z_COLOUR_UNDEFINED;
-//static z_colour ncursesw_current_foreground_colour = Z_COLOUR_UNDEFINED;
-//static z_colour ncursesw_current_background_colour = Z_COLOUR_UNDEFINED;
-//static z_colour ncursesw_interface_default_foreground_colour = -1;
-//static z_colour ncursesw_interface_default_background_colour = -1;
 static bool ncursesw_interface_open = false;
+
 static int n_color_pairs_in_use;
 static int n_color_pairs_availabe;
 static bool color_initialized = false;
@@ -119,11 +113,10 @@ static bool color_initialized = false;
 // provide. In such a case, the color pair that has not been used for
 // a longer time than all others is recycled.
 static short *color_pair_usage;
+
 static int ncursesw_interface_screen_height = -1;
 static int ncursesw_interface_screen_width = -1;
-//static uint32_t ncursesw_current_colour_code;
 static attr_t ncursesw_no_attrs = 0;
-//static short ncursesw_no_color = 0;
 static wchar_t ncursesw_setcchar_init_string[2];
 static bool dont_allocate_new_colour_pair = false;
 static bool timer_active = true;
@@ -131,18 +124,12 @@ static bool timer_active = true;
 #ifdef ENABLE_X11_IMAGES
 static z_image *frontispiece = NULL;
 static bool enable_x11_graphics = true;
-static bool enable_x11_inline_graphics = true;
+static bool enable_x11_inline_graphics = false;
 static x11_image_window_id drilbo_window_id = -1;
 static int x11_signalling_pipe[2];
 unsigned int x11_read_buf[1];
 fd_set x11_in_fds;
 #endif // ENABLE_X11_IMAGES
-
-/*
-static void ncursesw_do_nothing(void *UNUSED(dummy_parameter))
-{
-}
-*/
 
 
 static z_ucs *z_ucs_string_to_wchar_t(wchar_t *dest, z_ucs *src,
@@ -160,8 +147,6 @@ static z_ucs *z_ucs_string_to_wchar_t(wchar_t *dest, z_ucs *src,
       *dest = L'\0';
       return src;
     }
-
-    //TRACE_LOG("converting %c to wchar_t.\n", (char)*src);
 
     *dest = (wchar_t)*src;
 
@@ -227,7 +212,6 @@ static void infowin_z_ucs_output_wordwrap_destination(z_ucs *z_ucs_output,
     z_ucs_output = infowin_more;
   }
 
-  //wprintw(infowin, "%d,%d\n", infowin_lines_skipped, infowin_topindex);
   while (z_ucs_output != NULL)
   {
     z_ucs_output = z_ucs_string_to_wchar_t(
@@ -243,34 +227,6 @@ static void infowin_z_ucs_output_wordwrap_destination(z_ucs *z_ucs_output,
   if (infowin_full == true)
     waddstr(infowin, "]");
 }
-
-
-/*
-static struct wordwrap_target ncursesw_wrapper_infowin_target =
-{
-  &infowin_z_ucs_output_wordwrap_destination,
-  &ncursesw_do_nothing,
-  &ncursesw_do_nothing
-};
-*/
-
-
-/*
-static short color_name_to_curses_colour(char *colour_name)
-{
-  // Keep in sync with char* z_colour_names[] at the top.
-
-  if      (strcmp(colour_name, "black") == 0)   { return COLOR_BLACK;   }
-  else if (strcmp(colour_name, "red") == 0)     { return COLOR_RED;     }
-  else if (strcmp(colour_name, "green") == 0)   { return COLOR_GREEN;   }
-  else if (strcmp(colour_name, "yellow") == 0)  { return COLOR_YELLOW;  }
-  else if (strcmp(colour_name, "blue") == 0)    { return COLOR_BLUE;    }
-  else if (strcmp(colour_name, "magenta") == 0) { return COLOR_MAGENTA; }
-  else if (strcmp(colour_name, "cyan") == 0)    { return COLOR_CYAN;    }
-  else if (strcmp(colour_name, "white") == 0)   { return COLOR_WHITE;   }
-  else                                              { return -1;            }
-}
-*/
 
 
 #ifdef ENABLE_TRACING
@@ -361,30 +317,6 @@ static bool is_input_timeout_available()
 {
   return true;
 }
-
-
-/*
-static void start_timer(int timeout_millis)
-{
-  if (timeout_millis > 0)
-  {
-    TRACE_LOG("input timeout: %d ms. (%d/%d)\n", timeout_millis,
-        timeout_millis - (timeout_millis % 1000), 
-        (timeout_millis % 1000) * 1000);
-    timerval.it_value.tv_sec = timeout_millis - (timeout_millis % 1000);
-    timerval.it_value.tv_usec = (timeout_millis % 1000) * 1000;
-    timer_active = true;
-    setitimer(ITIMER_REAL, &timerval, NULL);
-  }
-}
-
-
-static void stop_timer()
-{
-  timer_active = false;
-  setitimer(ITIMER_REAL, &empty_timerval, NULL);
-}
-*/
 
 
 static void turn_on_input()
@@ -596,10 +528,17 @@ static void print_startup_syntax()
       i18n_ncursesw_USE_UMEM_FOR_SAVEGAMES);
   streams_latin1_output("\n");
 
-  streams_latin1_output( " -x,  --enable-xterm-graphics: ");
+#ifdef ENABLE_X11_IMAGES
+  streams_latin1_output( " -nx, --disable-x11-graphics: ");
   i18n_translate(
       fizmo_ncursesw_module_name,
-      i18n_ncursesw_ENABLE_XTERM_GRAPHICS);
+      i18n_ncursesw_DISABLE_X11_GRAPHICS);
+  streams_latin1_output("\n");
+
+  streams_latin1_output( " -xi, --enable-x11-inline-graphics: ");
+  i18n_translate(
+      fizmo_ncursesw_module_name,
+      i18n_ncursesw_ENABLE_X11_INLINE_GRAPHICS);
   streams_latin1_output("\n");
 
   streams_latin1_output( " -xt, --enable-xterm-title: ");
@@ -607,6 +546,7 @@ static void print_startup_syntax()
       fizmo_ncursesw_module_name,
       i18n_ncursesw_USE_XTERM_TITLE);
   streams_latin1_output("\n");
+#endif //ENABLE_X11_IMAGES
 
   /*
   streams_latin1_output( " -s8, --force-8bit-sound: ");
@@ -684,6 +624,20 @@ static int parse_config_parameter(char *key, char *value)
       use_xterm_title = true;
     else
       use_xterm_title = false;
+    return 0;
+  }
+  else if (strcmp(key, "disable-x11-graphics") == 0)
+  {
+    if (
+        (value == NULL)
+        ||
+        (*value == 0)
+        ||
+        (strcmp(value, true_value) == 0)
+       )
+      enable_x11_graphics = false;
+    else
+      enable_x11_graphics = true;
     return 0;
   }
   else if (strcmp(key, "display-x11-inline-image") == 0)
@@ -1207,7 +1161,8 @@ static void link_interface_to_story(struct z_story *UNUSED(story))
 
 #ifdef ENABLE_X11_IMAGES
   TRACE_LOG("frontispiece: %d.\n", active_z_story->frontispiece_image_no);
-  if (active_z_story->frontispiece_image_no >= 0)
+  if ( (active_z_story->frontispiece_image_no >= 0)
+      && (enable_x11_graphics != false) )
     display_X11_image_window(active_z_story->frontispiece_image_no);
 #endif // ENABLE_X11_IMAGES
 }
@@ -2129,55 +2084,6 @@ static char *select_story_from_menu(char *fizmo_dir)
 }
 
 
-/*
-static int ncursesw_parse_config_parameter(char *key, char *value)
-{
-  //short color;
-  //int int_value;
-
-  if (strcmp(key, "bold-for-bright-foreground") == 0)
-  {
-    if ( (value != NULL) && (strcmp(value, "") != 0) )
-      use_bold_for_bright_foreground = true;
-
-    return 0;
-  }
-  else if (strcmp(key, "blink-for-bright-background") == 0)
-  {
-    if ( (value != NULL) && (strcmp(value, "") != 0) )
-      use_blink_for_bright_background = true;
-
-    return 0;
-  }
-#ifdef ENABLE_X11_IMAGES
-  else if (strcmp(key, "enable-xterm-graphics") == 0)
-  {
-   if ( (value != NULL) && (strcmp(value, "") != 0) )
-      enable_x11_graphics = true;
-
-    return 0;
-  }
-#endif
-  else if (strcmp(key, "dont-update-story-list") == 0)
-  {
-    if ( (value != NULL) && (strcmp(value, "") != 0) )
-      dont_update_story_list_on_start = true;
-
-    return 0;
-  }
-  else if (strcmp(key, "enable-xterm-title") == 0)
-  {
-    if ( (value != NULL) && (strcmp(value, "") != 0) )
-      use_xterm_title = true;
-
-    return 0;
-  }
-
-  return 1;
-}
-*/
-
-
 void catch_signal(int sig_num)
 {
   int bytes_written = 0;
@@ -2267,8 +2173,6 @@ int main(int argc, char *argv[])
     if ((current_locale_copy
           = (char*)malloc(strlen(current_locale) + 1)) == NULL)
     {
-      //set_configuration_value("locale", DEFAULT_LOCALE, "fizmo");
-
       i18n_translate_and_exit(
           fizmo_ncursesw_module_name,
           i18n_ncursesw_FUNCTION_CALL_MALLOC_P0D_RETURNED_NULL_PROBABLY_OUT_OF_MEMORY,
@@ -2281,17 +2185,6 @@ int main(int argc, char *argv[])
     index = strchr(current_locale_copy, '.');
     if (index != NULL)
       *index = '\0';
-
-    /*
-    if (set_configuration_value("locale", current_locale_copy, "fizmo") == -1)
-      set_configuration_value("locale", DEFAULT_LOCALE, "fizmo");
-    else
-      fizmo_locale = current_locale_copy;
-      */
-  }
-  else
-  {
-    //set_configuration_value("locale", DEFAULT_LOCALE, "fizmo");
   }
 
   ncursesw_argc = argc;
@@ -2435,15 +2328,23 @@ int main(int argc, char *argv[])
     }
 #ifdef ENABLE_X11_IMAGES
     else if (
-        (strcmp(argv[argi], "-x") == 0)
+        (strcmp(argv[argi], "-nx") == 0)
         ||
-        (strcmp(argv[argi], "--enable-xterm-graphics") == 0)
+        (strcmp(argv[argi], "--disable-x11-graphics") == 0)
         )
     {
-      enable_x11_graphics = true;
+      enable_x11_graphics = false;
       argi++;
     }
-#endif
+    else if (
+        (strcmp(argv[argi], "-xi") == 0)
+        ||
+        (strcmp(argv[argi], "--enable-x11-inline-graphics") == 0)
+        )
+    {
+      enable_x11_inline_graphics = true;
+      argi++;
+    }
     else if (
         (strcmp(argv[argi], "-xt") == 0)
         ||
@@ -2453,6 +2354,7 @@ int main(int argc, char *argv[])
       use_xterm_title = true;
       argi++;
     }
+#endif
     /*
     else if (
         (strcmp(argv[argi], "-s8") == 0)
@@ -2698,25 +2600,6 @@ int main(int argc, char *argv[])
         errno,
         strerror(errno));
 
-  //signal(SIGALRM, catch_signal);
-  //signal(SIGWINCH, ncursesw_if_catch_signal);
-
-  /*
-  timerval.it_interval.tv_sec = 0;
-  // The timer must not be automatically restarted: In case verfication
-  // routines take too long (or in case read is called recursively) the
-  // verification routine might be called again while it has not finished.
-  //timerval.it_interval.tv_usec = 100000;
-  timerval.it_interval.tv_usec = 0;
-  timerval.it_value.tv_sec = 0;
-  timerval.it_value.tv_usec = 100000;
-
-  empty_timerval.it_interval.tv_sec = 0;
-  empty_timerval.it_interval.tv_usec = 0;
-  empty_timerval.it_value.tv_sec = 0;
-  empty_timerval.it_value.tv_usec = 0;
-  */
-
   sigemptyset(&default_sigaction.sa_mask);
   default_sigaction.sa_flags = 0;
   default_sigaction.sa_handler = &catch_signal;
@@ -2755,5 +2638,4 @@ int main(int argc, char *argv[])
 
   return 0;
 }
-
 
