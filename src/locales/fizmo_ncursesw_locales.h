@@ -60,7 +60,7 @@
 #define i18n_ncursesw_SPACE_FOR_NEXT_PAGE 24
 #define i18n_ncursesw_B_FOR_LAST_PAGE 25
 #define i18n_ncursesw_USE_UMEM_FOR_SAVEGAMES 26
-#define i18n_ncursesw_ENABLE_XTERM_GRAPHICS 27
+#define i18n_ncursesw_DISABLE_X11_GRAPHICS 27
 #define i18n_ncursesw_USE_XTERM_TITLE 28
 #define i18n_ncursesw_FORCE_8BIT_SOUND 29
 #define i18n_ncursesw_DISABLE_SOUND 30
@@ -82,6 +82,7 @@
 #define i18n_ncursesw_LIBCELLINTERFACE_VERSION_P0S 46
 #define i18n_ncursesw_LOCALE_SEARCH_PATH 47
 #define i18n_ncursesw_FILENAME_TO_READ_COMMANDS_FROM 48
+#define i18n_ncursesw_ENABLE_X11_INLINE_GRAPHICS 49
 
 extern z_ucs fizmo_ncursesw_module_name[];
 

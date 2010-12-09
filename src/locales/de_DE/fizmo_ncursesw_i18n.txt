@@ -25,7 +25,7 @@ Zur Zeit sind noch keine Story-Dateien registriert. Wenn Sie eine bestimmte\nGes
 Leertaste für nächste Seite
 b für letzte Seite
 mit UMem statt CMem abspeichern.
-XTerm-Grafik aktivieren.
+X11-Grafik deaktivieren.
 XTerm-Titelzeile verwenden.
 Sound als 8-Bit-Samples abspielen.
 Sound deaktivieren.
@@ -47,3 +47,4 @@ fizmo-ncursesw version \{0s}.
 libcellinterface version \{0s}.
 Lokalisierungsdaten-Suchpfad
 Dateiname, von dem Kommandos gelesen werden.
+X11-Inline-Grafik aktivieren.

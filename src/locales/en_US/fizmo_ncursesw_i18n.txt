@@ -25,7 +25,7 @@ No story files are currently known. If you would like to start a specific\nstory
 Space for next page
 b for last page
 Use UMem instead of CMem for saving.
-Enable XTerm graphics.
+Disable X11 graphics.
 Use XTerm title.
 Force 8-bit sound output.
 Disable sound.
@@ -47,3 +47,4 @@ fizmo-ncursesw version \{0s}.
 libcellinterface version \{0s}.
 Locale search path
 Filename to read commands from.
+Enable X11 inline graphics.
