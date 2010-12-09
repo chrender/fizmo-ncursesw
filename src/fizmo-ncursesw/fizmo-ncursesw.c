@@ -720,19 +720,33 @@ static int parse_config_parameter(char *key, char *value)
 
 
 static int z_to_curses_colour(z_colour z_colour_to_convert,
-    int UNUSED(colour_class))
+    int colour_class)
 {
-  switch (z_colour_to_convert)
+  if (z_colour_to_convert == Z_COLOUR_DEFAULT)
   {
-    case Z_COLOUR_BLACK:   return COLOR_BLACK;
-    case Z_COLOUR_RED:     return COLOR_RED;
-    case Z_COLOUR_GREEN:   return COLOR_GREEN;
-    case Z_COLOUR_YELLOW:  return COLOR_YELLOW;
-    case Z_COLOUR_BLUE:    return COLOR_BLUE;
-    case Z_COLOUR_MAGENTA: return COLOR_MAGENTA;
-    case Z_COLOUR_CYAN:    return COLOR_CYAN;
-    case Z_COLOUR_WHITE:   return COLOR_WHITE;
-    default:               return -1;
+    if (colour_class == NCURSESW_COLOUR_CLASS_FOREGROUND)
+      return z_to_curses_colour(
+          default_foreground_colour, NCURSESW_COLOUR_CLASS_FOREGROUND);
+    else if (colour_class == NCURSESW_COLOUR_CLASS_BACKGROUND)
+      return z_to_curses_colour(
+          default_background_colour, NCURSESW_COLOUR_CLASS_BACKGROUND);
+    else
+      return -1;
+  }
+  else
+  {
+    switch (z_colour_to_convert)
+    {
+      case Z_COLOUR_BLACK:   return COLOR_BLACK;
+      case Z_COLOUR_RED:     return COLOR_RED;
+      case Z_COLOUR_GREEN:   return COLOR_GREEN;
+      case Z_COLOUR_YELLOW:  return COLOR_YELLOW;
+      case Z_COLOUR_BLUE:    return COLOR_BLUE;
+      case Z_COLOUR_MAGENTA: return COLOR_MAGENTA;
+      case Z_COLOUR_CYAN:    return COLOR_CYAN;
+      case Z_COLOUR_WHITE:   return COLOR_WHITE;
+      default:               return -1;
+    }
   }
 }
 
