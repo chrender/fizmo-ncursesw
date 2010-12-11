@@ -119,6 +119,7 @@ static int ncursesw_interface_screen_width = -1;
 static attr_t ncursesw_no_attrs = 0;
 static wchar_t ncursesw_setcchar_init_string[2];
 static bool dont_allocate_new_colour_pair = false;
+static int max_nof_color_pairs;
 static bool timer_active = true;
 
 #ifdef ENABLE_X11_IMAGES
@@ -705,21 +706,24 @@ static int z_to_curses_colour(z_colour z_colour_to_convert,
 }
 
 
+#ifdef ENABLE_TRACING
 static void dump_col_usage()
 {
   int j;
   int pair;
   short pair_foreground, pair_background;
 
-  for (j=0; j<n_color_pairs_in_use; j++)
-  {
-    pair = color_pair_usage[j];
-    pair_content(pair, &pair_foreground, &pair_background);
-    TRACE_LOG("col-usage[%02d]: %d, %d/%d\n", j, pair,
-        curses_to_z_colour(pair_foreground),
-        curses_to_z_colour(pair_background));
-  }
+  if (n_color_pairs_availabe < max_nof_color_pairs)
+    for (j=0; j<n_color_pairs_in_use; j++)
+    {
+      pair = color_pair_usage[j];
+      pair_content(pair, &pair_foreground, &pair_background);
+      TRACE_LOG("col-usage[%02d]: %d, %d/%d\n", j, pair,
+          curses_to_z_colour(pair_foreground),
+          curses_to_z_colour(pair_background));
+    }
 }
+#endif // ENABLE_TRACING
 
 
 // curses provides a constant named COLOR_PAIRS telling us the maximum
@@ -728,10 +732,6 @@ static void dump_col_usage()
 // so we'll use the available pairs in a round-about fashion. Thus we
 // can keep the latest defined color pairs as long as possible and
 // hopefully the screen in the best possible look.
-// The maximum number of color pairs useful to us is 121 since section
-// 8.3.1 of the Z-Spec defines the colors black, red, green, yellow, blue,
-// magenta, cyan, white and three different shades of grey. Every possible
-// combination results in 11*11 = 121 color pairs.
 static short get_color_pair(z_colour z_foreground_colour,
     z_colour z_background_colour)
 {
@@ -771,7 +771,7 @@ static short get_color_pair(z_colour z_foreground_colour,
     {
       TRACE_LOG("Found existing color pair with index %d.\n", i);
 
-      if (n_color_pairs_availabe != 121)
+      if (n_color_pairs_availabe != max_nof_color_pairs)
       {
         // In case we're working with a limited number of colors we'll
         // have to update the color_pair_usage array. We'll put the index
@@ -797,9 +797,12 @@ static short get_color_pair(z_colour z_foreground_colour,
 
           color_pair_usage[0] = i;
         }
+
+#ifdef ENABLE_TRACING
+        dump_col_usage();
+#endif // ENABLE_TRACING
       }
 
-      dump_col_usage();
       return i;
     }
   }
@@ -817,7 +820,7 @@ static short get_color_pair(z_colour z_foreground_colour,
     new_color_pair_number = n_color_pairs_in_use + 1;
     TRACE_LOG("Allocating new color pair %d.\n", new_color_pair_number);
     n_color_pairs_in_use++;
-    if (n_color_pairs_availabe != 121)
+    if (n_color_pairs_availabe != max_nof_color_pairs)
     {
       memmove(&(color_pair_usage[1]), color_pair_usage,
           (n_color_pairs_in_use-1) * sizeof(short));
@@ -851,7 +854,10 @@ static short get_color_pair(z_colour z_foreground_colour,
 
   TRACE_LOG("n_color pairs in use: %d.\n", n_color_pairs_in_use);
 
-  dump_col_usage();
+#ifdef ENABLE_TRACING
+    dump_col_usage();
+#endif // ENABLE_TRACING
+
   return new_color_pair_number;
 }
 
@@ -869,12 +875,12 @@ static void initialize_colors()
   //n_color_pairs_availabe = COLOR_PAIRS;
   n_color_pairs_availabe = COLOR_PAIRS - 1;
 
-  if (n_color_pairs_availabe > 121)
-    n_color_pairs_availabe = 121;
+  if (n_color_pairs_availabe > max_nof_color_pairs)
+    n_color_pairs_availabe = max_nof_color_pairs;
 
   TRACE_LOG("%d color pairs are availiable.\n", n_color_pairs_availabe);
 
-  if (n_color_pairs_availabe < 121)
+  if (n_color_pairs_availabe < max_nof_color_pairs)
   {
     // In case not all color combinations are available, we'll have to
     // keep track when the colors were used last.
@@ -1109,7 +1115,7 @@ static int display_X11_image_window(int image_no)
 #endif // ENABLE_X11_IMAGES
 
 
-static void link_interface_to_story(struct z_story *UNUSED(story))
+static void link_interface_to_story(struct z_story *story)
 {
   int flags;
 
@@ -1149,6 +1155,8 @@ static void link_interface_to_story(struct z_story *UNUSED(story))
         "fcntl / F_SETFL",
         errno,
         strerror(errno));
+
+  max_nof_color_pairs = story->max_nof_color_pairs;
 
   ncursesw_interface_open = true;
 
