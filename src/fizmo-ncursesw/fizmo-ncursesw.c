@@ -104,7 +104,7 @@ static char output_char_buf[NCURSESW_OUTPUT_CHAR_BUF_SIZE];
 static bool ncursesw_interface_open = false;
 
 static int n_color_pairs_in_use;
-static int n_color_pairs_availabe;
+static int n_color_pairs_available;
 static bool color_initialized = false;
 // This array contains (n_color_pairs_in_use) elements. The first element
 // contains the number of the color pair the was selected last, the
@@ -119,7 +119,12 @@ static int ncursesw_interface_screen_width = -1;
 static attr_t ncursesw_no_attrs = 0;
 static wchar_t ncursesw_setcchar_init_string[2];
 static bool dont_allocate_new_colour_pair = false;
-static int max_nof_color_pairs;
+
+// "max_nof_color_pairs"  will be equal to story->max_nof_color_pairs once
+// the interface is initialized. Up to then it will contain -1 or COLOR_PAIRS-1
+// if the story menu is in use.
+static int max_nof_color_pairs = -1;
+
 static bool timer_active = true;
 
 #ifdef ENABLE_X11_IMAGES
@@ -713,7 +718,7 @@ static void dump_col_usage()
   int pair;
   short pair_foreground, pair_background;
 
-  if (n_color_pairs_availabe < max_nof_color_pairs)
+  if (n_color_pairs_available < max_nof_color_pairs)
     for (j=0; j<n_color_pairs_in_use; j++)
     {
       pair = color_pair_usage[j];
@@ -771,7 +776,7 @@ static short get_color_pair(z_colour z_foreground_colour,
     {
       TRACE_LOG("Found existing color pair with index %d.\n", i);
 
-      if (n_color_pairs_availabe != max_nof_color_pairs)
+      if (n_color_pairs_available != max_nof_color_pairs)
       {
         // In case we're working with a limited number of colors we'll
         // have to update the color_pair_usage array. We'll put the index
@@ -815,12 +820,12 @@ static short get_color_pair(z_colour z_foreground_colour,
   if (bool_equal(dont_allocate_new_colour_pair, true))
     return -1;
 
-  if (n_color_pairs_in_use < n_color_pairs_availabe)
+  if (n_color_pairs_in_use < n_color_pairs_available)
   {
     new_color_pair_number = n_color_pairs_in_use + 1;
     TRACE_LOG("Allocating new color pair %d.\n", new_color_pair_number);
     n_color_pairs_in_use++;
-    if (n_color_pairs_availabe != max_nof_color_pairs)
+    if (n_color_pairs_available != max_nof_color_pairs)
     {
       memmove(&(color_pair_usage[1]), color_pair_usage,
           (n_color_pairs_in_use-1) * sizeof(short));
@@ -872,20 +877,24 @@ static void initialize_colors()
   // use by curses and should not be changed or used in application programs."
   // Thus, color pair 0 is not used here and the number of availiable colors
   // is set to COLOR_PAIRS - 1.
-  //n_color_pairs_availabe = COLOR_PAIRS;
-  n_color_pairs_availabe = COLOR_PAIRS - 1;
+  //n_color_pairs_available = COLOR_PAIRS;
+  n_color_pairs_available = COLOR_PAIRS - 1;
 
-  if (n_color_pairs_availabe > max_nof_color_pairs)
-    n_color_pairs_availabe = max_nof_color_pairs;
+  // In case there has been no story initialization yet, max_nof_color_pairs
+  // is still -1.
+  if (max_nof_color_pairs == -1)
+    max_nof_color_pairs = n_color_pairs_available;
+  else if (n_color_pairs_available > max_nof_color_pairs)
+    n_color_pairs_available = max_nof_color_pairs;
 
-  TRACE_LOG("%d color pairs are availiable.\n", n_color_pairs_availabe);
+  TRACE_LOG("%d color pairs are availiable.\n", n_color_pairs_available);
 
-  if (n_color_pairs_availabe < max_nof_color_pairs)
+  if (n_color_pairs_available < max_nof_color_pairs)
   {
     // In case not all color combinations are available, we'll have to
     // keep track when the colors were used last.
     color_pair_usage
-      = (short*)fizmo_malloc(sizeof(short) * n_color_pairs_availabe);
+      = (short*)fizmo_malloc(sizeof(short) * n_color_pairs_available);
     color_pair_usage[0] = 0;
   }
 
@@ -1157,6 +1166,7 @@ static void link_interface_to_story(struct z_story *story)
         strerror(errno));
 
   max_nof_color_pairs = story->max_nof_color_pairs;
+  color_initialized = false;
 
   ncursesw_interface_open = true;
 
