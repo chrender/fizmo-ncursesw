@@ -2163,7 +2163,8 @@ int main(int argc, char *argv[])
   turn_on_trace();
 #endif // ENABLE_TRACING
 
-  current_locale = setlocale(LC_ALL, "");
+  current_locale = setlocale(LC_ALL, "C");
+  setlocale(LC_CTYPE, "");
 
   fizmo_register_screen_cell_interface(&ncursesw_interface);
 
