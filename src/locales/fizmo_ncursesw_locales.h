@@ -83,6 +83,7 @@
 #define i18n_ncursesw_LOCALE_SEARCH_PATH 47
 #define i18n_ncursesw_FILENAME_TO_READ_COMMANDS_FROM 48
 #define i18n_ncursesw_ENABLE_X11_INLINE_GRAPHICS 49
+#define i18n_ncursesw_LIBDRILBO_VERSION_P0S 50
 
 extern z_ucs fizmo_ncursesw_module_name[];
 

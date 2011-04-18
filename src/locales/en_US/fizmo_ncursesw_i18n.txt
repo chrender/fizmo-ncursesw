@@ -48,3 +48,4 @@ libcellinterface version \{0s}.
 Locale search path
 Filename to read commands from.
 Enable X11 inline graphics.
+libdrilbo version \{0s}.

@@ -48,3 +48,4 @@ libcellinterface version \{0s}.
 Lokalisierungsdaten-Suchpfad
 Dateiname, von dem Kommandos gelesen werden.
 X11-Inline-Grafik aktivieren.
+libdrilbo version \{0s}.
