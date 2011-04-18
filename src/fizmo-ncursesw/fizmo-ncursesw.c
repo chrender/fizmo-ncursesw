@@ -1293,6 +1293,13 @@ static void output_interface_info()
       i18n_ncursesw_FIZMO_NCURSESW_VERSION_P0S,
       FIZMO_NCURSESW_VERSION);
   (void)streams_latin1_output("\n");
+#ifdef ENABLE_X11_IMAGES
+  (void)i18n_translate(
+      fizmo_ncursesw_module_name,
+      i18n_ncursesw_LIBDRILBO_VERSION_P0S,
+      get_drilbo_version());
+  (void)streams_latin1_output("\n");
+#endif //ENABLE_X11_IMAGES
 }
 
 
