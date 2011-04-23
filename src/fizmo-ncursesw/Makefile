@@ -10,7 +10,7 @@ CFLAGS += $(shell pkg-config --cflags libfizmo)
 CFLAGS += $(shell pkg-config --cflags libcellif)
 CFLAGS += $(NCURSESW_PKG_CFLAGS) $(NCURSESW_NONPKG_CFLAGS)
 
-LIBS =
+LIBS = -lm
 LIBS += $(shell pkg-config --libs libfizmo)
 LIBS += $(shell pkg-config --libs libcellif)
 LIBS += $(NCURSESW_PKG_LIBS) $(NCURSESW_NONPKG_LIBS)
