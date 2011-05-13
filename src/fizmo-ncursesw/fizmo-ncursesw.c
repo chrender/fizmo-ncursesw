@@ -635,6 +635,7 @@ static int parse_config_parameter(char *key, char *value)
   }
   else if (strcmp(key, "disable-x11-graphics") == 0)
   {
+#ifdef ENABLE_X11_IMAGES
     if (
         (value == NULL)
         ||
@@ -645,10 +646,12 @@ static int parse_config_parameter(char *key, char *value)
       enable_x11_graphics = false;
     else
       enable_x11_graphics = true;
+#endif // ENABLE_X11_IMAGES
     return 0;
   }
   else if (strcmp(key, "display-x11-inline-image") == 0)
   {
+#ifdef ENABLE_X11_IMAGES
     if (
         (value == NULL)
         ||
@@ -659,6 +662,7 @@ static int parse_config_parameter(char *key, char *value)
       enable_x11_inline_graphics = true;
     else
       enable_x11_inline_graphics = false;
+#endif // ENABLE_X11_IMAGES
     return 0;
   }
   else if (strcmp(key, "dont-update-story-list") == 0)
