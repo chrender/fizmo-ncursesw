@@ -1746,7 +1746,7 @@ static struct z_screen_cell_interface ncursesw_interface =
 };
 
 
-static char *select_story_from_menu(char *fizmo_dir)
+static char *select_story_from_menu()
 {
   //z_colour foreground, background;
   int input;
@@ -1780,7 +1780,7 @@ static char *select_story_from_menu(char *fizmo_dir)
 
   story_list
     = dont_update_story_list_on_start != true
-    ? update_fizmo_story_list(fizmo_dir)
+    ? update_fizmo_story_list()
     : get_z_story_list();
 
   if ( (story_list == NULL) || (story_list->nof_entries < 1) )
@@ -2156,15 +2156,8 @@ int main(int argc, char *argv[])
   int argi = 1;
   int story_filename_parameter_number = -1;
   int blorb_filename_parameter_number = -1;
-  char *current_locale;
-  char *current_locale_copy;
-  char *index;
   char *story_file;
   int flags;
-  char *value;
-  //char *slash_index = NULL;
-  char *fizmo_dir = NULL;
-  //int len;
   int int_value;
   char *cwd = NULL;
   char *absdirname = NULL;
@@ -2174,49 +2167,19 @@ int main(int argc, char *argv[])
   turn_on_trace();
 #endif // ENABLE_TRACING
 
-  current_locale = setlocale(LC_ALL, "C");
+  setlocale(LC_ALL, "C");
   setlocale(LC_CTYPE, "");
 
   fizmo_register_screen_cell_interface(&ncursesw_interface);
 
 #ifdef SOUND_INTERFACE_STRUCT_NAME
-  //TRACE_LOG("sound: %p\n", &SOUND_INTERFACE_STRUCT_NAME);
-  //TRACE_LOG("sound2: %p\n", &sound_interface_sdl);
   fizmo_register_sound_interface(&SOUND_INTERFACE_STRUCT_NAME);
-  //TRACE_LOG("init_sound: %p\n", (&SOUND_INTERFACE_STRUCT_NAME)->init_sound);
-  //(&sound_interface_sdl)->init_sound();
-  //TRACE_LOG("close_sound: %p\n", SOUND_INTERFACE_STRUCT_NAME->close_sound);
 #endif // SOUND_INTERFACE_STRUCT_NAME
-
-  //TRACE_LOG("sound: %p\n", SOUND_INTERFACE_STRUCT_NAME);
-
-  TRACE_LOG("current locale: \"%s\".\n", current_locale);
 
   // Parsing must occur after "fizmo_register_screen_cell_interface" so
   // that fizmo knows where to forward "parse_config_parameter" parameters
   // to.
   parse_fizmo_config_files();
-
-  value = get_configuration_value("locale");
-
-  if ( (current_locale != NULL) && (value == NULL) )
-  {
-    if ((current_locale_copy
-          = (char*)malloc(strlen(current_locale) + 1)) == NULL)
-    {
-      i18n_translate_and_exit(
-          fizmo_ncursesw_module_name,
-          i18n_ncursesw_FUNCTION_CALL_MALLOC_P0D_RETURNED_NULL_PROBABLY_OUT_OF_MEMORY,
-          -0x010e,
-          (long int)strlen(current_locale) + 1);
-    }
-
-    strcpy(current_locale_copy, current_locale);
-
-    index = strchr(current_locale_copy, '.');
-    if (index != NULL)
-      *index = '\0';
-  }
 
   ncursesw_argc = argc;
   ncursesw_argv = argv;
@@ -2481,7 +2444,8 @@ int main(int argc, char *argv[])
         ||
         (strcmp(argv[argi], "--update-story-list") == 0))
     {
-      update_fizmo_story_list(fizmo_dir);
+      printf("\n");
+      update_fizmo_story_list();
       printf("\n");
       directory_was_searched = true;
       argi += 1;
@@ -2639,7 +2603,7 @@ int main(int argc, char *argv[])
 
   if (story_filename_parameter_number == -1)
   {
-    if ((story_file = select_story_from_menu(fizmo_dir)) == NULL)
+    if ((story_file = select_story_from_menu()) == NULL)
       return 0;
   }
   else
