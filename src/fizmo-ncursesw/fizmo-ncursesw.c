@@ -529,6 +529,12 @@ static void print_startup_syntax()
       i18n_ncursesw_USE_UMEM_FOR_SAVEGAMES);
   streams_latin1_output("\n");
 
+  streams_latin1_output( " -dh, --disable-hyphenation: ");
+  i18n_translate(
+      fizmo_ncursesw_module_name,
+      i18n_ncursesw_DISABLE_HYPHENATION);
+  streams_latin1_output("\n");
+
 #ifdef ENABLE_X11_IMAGES
   streams_latin1_output( " -nx, --disable-x11-graphics: ");
   i18n_translate(
@@ -2288,6 +2294,15 @@ int main(int argc, char *argv[])
         )
     {
       set_configuration_value("quetzal-umem", "true");
+      argi ++;
+    }
+    else if (
+        (strcmp(argv[argi], "-dh") == 0)
+        ||
+        (strcmp(argv[argi], "--disable-hyphenation") == 0)
+        )
+    {
+      set_configuration_value("disable-hyphenation", "true");
       argi ++;
     }
     else if (
