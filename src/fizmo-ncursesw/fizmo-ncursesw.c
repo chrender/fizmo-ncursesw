@@ -511,12 +511,6 @@ static void print_startup_syntax()
       i18n_ncursesw_DONT_USE_COLORS);
   streams_latin1_output("\n");
 
-  streams_latin1_output( " -ec, --enable-colors: ");
-  i18n_translate(
-      fizmo_ncursesw_module_name,
-      i18n_ncursesw_ENABLE_COLORS);
-  streams_latin1_output("\n");
-
   streams_latin1_output( " -lm, --left-margin: " );
   i18n_translate(
       fizmo_ncursesw_module_name,
@@ -1776,7 +1770,7 @@ static char *select_story_from_menu()
   z_ucs *ptr;
   attr_t attrs;
   short menucolorpair = -1;
-  char *config_enablecolor, *config_disablecolor;
+  char *config_disablecolor;
 
   story_list
     = dont_update_story_list_on_start != true
@@ -1833,20 +1827,12 @@ static char *select_story_from_menu()
       noecho();
       keypad(stdscr, true);
 
-      config_enablecolor = get_configuration_value("enable-color");
       config_disablecolor = get_configuration_value("disable-color");
       if (
-          // Either if configuration tell us to fore-enable color,
-          ( (config_enablecolor != NULL)
-            && (strcmp(config_enablecolor, "true") == 0) )
-          ||
-          // Or if color is available and not disabled by user,
-          (
            (has_colors() == true)
            &&
-           ( (config_disablecolor== NULL)
+           ( (config_disablecolor == NULL)
              || (strcmp(config_disablecolor, "true") != 0) )
-          )
          )
       {
         start_color();
@@ -2308,16 +2294,7 @@ int main(int argc, char *argv[])
         (strcmp(argv[argi], "-nc") == 0)
         || (strcmp(argv[argi], "--dont-use-colors: ") == 0) )
     {
-      set_configuration_value("enable-color", "false");
       set_configuration_value("disable-color", "true");
-      argi ++;
-    }
-    else if (
-        (strcmp(argv[argi], "-ec") == 0)
-        || (strcmp(argv[argi], "--enable-colors: ") == 0) )
-    {
-      set_configuration_value("disable-color", "false");
-      set_configuration_value("enable-color", "true");
       argi ++;
     }
 #ifdef ENABLE_X11_IMAGES

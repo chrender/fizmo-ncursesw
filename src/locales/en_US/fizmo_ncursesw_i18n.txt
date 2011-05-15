@@ -20,7 +20,6 @@ Show help message and exit.
 Use bold for bright foreground colors.
 Use blink for bright background colors.
 Don't use colors.
-Force using colors.
 No story files are currently known. If you would like to start a specific\nstory file, just append it to the command line (like "fizmo mystory.z5"). If\nyou would like to search a directory you can type "fizmo -s mydirectoryname".\nand run "fizmo" again. There are many more options for finding and updating\nstory data, just take a look at the manual page or type "fizmo -h".
 Space for next page
 b for last page

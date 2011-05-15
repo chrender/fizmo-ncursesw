@@ -20,7 +20,6 @@ Hilfe anzeigen und beenden.
 Bold-Attribut für helle Vordergrundfarben.
 Blink-Attribut für helle Hintergrundfarben.
 Keine Farben verwenden.
-Verwendung von Farbe erzwingen.
 Zur Zeit sind noch keine Story-Dateien registriert. Wenn Sie eine bestimmte\nGeschichte starten wollen, fügen Sie den Dateinamen an die Kommandozeile an\n(in der Art von "fizmo storydatei.z5"). Es ist auch möglich ein komplettes\nVerzeichnis zu durchsuchen, verwenden Sie dazu "fizmo -s verzeichnisname"\nund starten Sie dann "fizmo" erneut. Darüberhinaus existieren noch viele\nweitere Optionen Story-Dateien zu verwalten, die Manual Page oder ein Aufruf\nvon "fizmo -h" liefern weitere Informationen.
 Leertaste für nächste Seite
 b für letzte Seite
