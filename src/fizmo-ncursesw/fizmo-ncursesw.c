@@ -138,6 +138,14 @@ unsigned int x11_read_buf[1];
 fd_set x11_in_fds;
 #endif // ENABLE_X11_IMAGES
 
+static char *config_option_names[] = {
+  "enable-xterm-title",
+  "disable-x11-graphics",
+  "display-x11-inline-image",
+  "dont-update-story-list",
+  NULL
+};
+
 
 static z_ucs *z_ucs_string_to_wchar_t(wchar_t *dest, z_ucs *src,
     size_t max_dest_len)
@@ -511,6 +519,12 @@ static void print_startup_syntax()
       i18n_ncursesw_DONT_USE_COLORS);
   streams_latin1_output("\n");
 
+  streams_latin1_output( " -ec, --enable-colors: ");
+  i18n_translate(
+      fizmo_ncursesw_module_name,
+      i18n_ncursesw_ENABLE_COLORS);
+  streams_latin1_output("\n");
+
   streams_latin1_output( " -lm, --left-margin: " );
   i18n_translate(
       fizmo_ncursesw_module_name,
@@ -626,7 +640,7 @@ static int parse_config_parameter(char *key, char *value)
         ||
         (*value == 0)
         ||
-        (strcmp(value, true_value) == 0)
+        (strcmp(value, config_true_value) == 0)
        )
       use_xterm_title = true;
     else
@@ -641,7 +655,7 @@ static int parse_config_parameter(char *key, char *value)
         ||
         (*value == 0)
         ||
-        (strcmp(value, true_value) == 0)
+        (strcmp(value, config_true_value) == 0)
        )
       enable_x11_graphics = false;
     else
@@ -657,7 +671,7 @@ static int parse_config_parameter(char *key, char *value)
         ||
         (*value == 0)
         ||
-        (strcmp(value, true_value) == 0)
+        (strcmp(value, config_true_value) == 0)
        )
       enable_x11_inline_graphics = true;
     else
@@ -672,7 +686,7 @@ static int parse_config_parameter(char *key, char *value)
         ||
         (*value == 0)
         ||
-        (strcmp(value, true_value) == 0)
+        (strcmp(value, config_true_value) == 0)
        )
       dont_update_story_list_on_start = true;
     return 0;
@@ -681,6 +695,51 @@ static int parse_config_parameter(char *key, char *value)
   {
     return -2;
   }
+}
+
+
+static char *get_config_value(char *key)
+{
+  if (strcmp(key, "enable-xterm-title") == 0)
+  {
+    return use_xterm_title == true
+      ? config_true_value
+      : config_false_value;
+  }
+  else if (strcmp(key, "disable-x11-graphics") == 0)
+  {
+#ifdef ENABLE_X11_IMAGES
+    return enable_x11_graphics == false
+      ? config_true_value
+      : config_false_value;
+#endif // ENABLE_X11_IMAGES
+    return config_true_value;
+  }
+  else if (strcmp(key, "display-x11-inline-image") == 0)
+  {
+#ifdef ENABLE_X11_IMAGES
+    return enable_x11_inline_graphics == true
+      ? config_true_value
+      : config_false_value;
+#endif // ENABLE_X11_IMAGES
+    return config_false_value;
+  }
+  else if (strcmp(key, "dont-update-story-list") == 0)
+  {
+    return dont_update_story_list_on_start == true
+      ? config_true_value
+      : config_false_value;
+  }
+  else
+  {
+    return NULL;
+  }
+}
+
+
+static char **get_config_option_names()
+{
+  return config_option_names;
 }
 
 
@@ -1728,6 +1787,8 @@ static struct z_screen_cell_interface ncursesw_interface =
   &is_bold_face_available,
   &is_italic_available,
   &parse_config_parameter,
+  &get_config_value,
+  &get_config_option_names,
   &link_interface_to_story,
   &reset_interface,
   &ncursw_close_interface,
@@ -2310,6 +2371,13 @@ int main(int argc, char *argv[])
         || (strcmp(argv[argi], "--dont-use-colors: ") == 0) )
     {
       set_configuration_value("disable-color", "true");
+      argi ++;
+    }
+    else if (
+        (strcmp(argv[argi], "-ec") == 0)
+        || (strcmp(argv[argi], "--enable-colors: ") == 0) )
+    {
+      set_configuration_value("enable-color", "true");
       argi ++;
     }
 #ifdef ENABLE_X11_IMAGES
