@@ -46,15 +46,16 @@
 #include <ncurses.h>
 //#include <ncursesw/ncurses.h>
 
+#include <tools/i18n.h>
+#include <tools/tracelog.h>
+#include <tools/z_ucs.h>
+#include <tools/unused.h>
+#include <tools/filesys.h>
 #include <interpreter/fizmo.h>
 #include <interpreter/streams.h>
 #include <interpreter/config.h>
-#include <tools/i18n.h>
-#include <tools/tracelog.h>
 #include <interpreter/filelist.h>
 #include <interpreter/wordwrap.h>
-#include <tools/z_ucs.h>
-#include <tools/unused.h>
 #include <screen_interface/screen_cell_interface.h>
 #include <cell_interface/cell_interface.h>
 
@@ -1142,7 +1143,7 @@ static int display_X11_image_window(int image_no)
 
   image_blorb_index = get_image_blorb_index(active_z_story, image_no);
 
-  fseek(
+  fsi->setfilepos(
       active_z_story->blorb_file,
       image_blorb_index->blorb_offset,
       SEEK_SET);
@@ -2528,7 +2529,7 @@ int main(int argc, char *argv[])
         else
         {
           if (cwd == NULL)
-            cwd = getcwd(NULL, 0);
+            cwd = fsi->get_cwd();
 
           if (absdirname_len < strlen(cwd) + strlen(argv[argi]) + 2)
           {
@@ -2563,7 +2564,7 @@ int main(int argc, char *argv[])
         else
         {
           if (cwd == NULL)
-            cwd = getcwd(NULL, 0);
+            cwd = fsi->get_cwd();
 
           if (absdirname_len < strlen(cwd) + strlen(argv[argi]) + 2)
           {
