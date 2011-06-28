@@ -1,4 +1,4 @@
-.TH FIZMO 6 "13 May 2011" "0.7.0-beta"
+.TH FIZMO 6 "28 June 2011" "0.7.0-beta"
 .SH NAME
 fizmo
 - Z-Machine Interpreter
@@ -74,11 +74,9 @@ Set background color. Valid color names are \fIblack\fP, \fIred\fP,
 \fIgreen\fP, \fIyellow\fP, \fIblue\fP, \fImagenta\fP, \fIcyan\fP and
 \fIwhite\fP.
 .TP
-.B -bb, --blink-for-bright-background
-Use blink for bright background colors.
-.TP
-.B -bf, --bold-for-bright-foreground
-Use bold for bright foreground colors.
+.B -dh, --disable-hyphenation
+Disable word hyphenation. Useful for languages other than the supported
+ones.
 .TP
 .B -ds, --disable-sound
 Disable sound alltogether. May be useful when playing on remote machines.
@@ -91,8 +89,11 @@ Set foreground color. Valid color names are \fIblack\fP, \fIred\fP,
 \fIgreen\fP, \fIyellow\fP, \fIblue\fP, \fImagenta\fP, \fIcyan\fP and
 \fIwhite\fP.
 .TP
+.B -fi, --start-file-input
+Start game with input from file.
+.TP
 .B -if, --input-file
-When the story starts, read input directly from a file.
+Filename to read commands from.
 .TP
 .B -l, --set-locale \fI<locale-code>\fP
 Set locale name for interpreter messages. Currently valid locale codes are
@@ -104,13 +105,18 @@ Set left margin width, requires a numeric argument.
 .B -nc, --dont-use-colors
 Don't use colors.
 .TP
-.B -p, --predictable
+.B -nu, --dont-update-story-list
+Don't update story-list on startup. Useful in case you've got a large
+number of story files in your repository.
+.TP
+.B -nx, --disable-x11-graphics
+Disable X11 graphics.
+.TP
+.B -pr, --predictable
 Start with random generator in predictable mode.
 .TP
-.B -fp, --force-predictable
-Start with random generator in predictable mode. The random generator will
-ignore all seed commands and always deliver predictable number (which might
-make games unsolvable).
+.B -ra, --random
+Start with random generator in standard random mode.
 .TP
 .B -rc, --record-commands
 Activate recording of commands as soon as the game starts.
@@ -132,24 +138,27 @@ be capable of 16-bit sound output).
 .B -st, --start-transcript
 Start game with scripting already enabled.
 .TP
+.B -sy, --sync-transcript
+When a transcript is active, write data directly into the file as soon
+as possible.
+.TP
 .B -t, --set-tandy-flag
 Sets the tandy flag, which emulates a game sold by the Tandy Corporation
 and slightly alters the game behaviour. See
 \fChttp://www.ifarchive.org/if-archive/infocom/info/tandy_bits.html\fP
 for detailed information on what the tandy flag does.
 .TP
+.B -u,  --update-story-list
+In case you have disabled automatic updates for your story list, this
+option will allow you to run the re-indexing manually.
+.TP
 .B -um, --umem
 Use UMem instead of CMem for saving.
 .TP
-.B -sy, --sync-transcript
-When a transcript is active, write data directly into the file as soon
-as possible.
-.TP
-.B -x, -enable-xterm-graphics
+.B -xi, -enable-x11-inline-graphics
 Enable XTerm graphics. This will make fizmo try to display graphics into
-an X11-XTerminal using Gtk 2.0 and Gdk-Pixbuf. Since this represents a
-rather ugly hack\[em]and may not work at all for some installations\[em]it is
-not enabled by default.
+a X-Terminal. Since this represents a rather ugly hack\[em]and may not
+work at all for some installations\[em]it is not enabled by default.
 .TP
 .B -xt, --enable-xterm-title
 Use the XTerminal title bar to display the game name.
@@ -163,6 +172,9 @@ Displays the list of available in-game commands.
 Displays general version about the interpreter and it's status, such as the
 version number, story release and serial number, stack, memory and random
 generator status.
+.TP
+.B /config
+Displays current configuration values.
 .TP
 .B /predictable
 Switches the random generator from \[lq]random\[rq] in \[lq]predictable\[rq]
@@ -236,8 +248,6 @@ beginning of the line.
 \fC transscript-filename = <filename>
 \fC command-filename = <filename>
 \fC langauage = <language-code>
-\fC bold-for-bright-foreground = <any value means yes, empty no>
-\fC blink-for-bright-background = <any value means yes, empty no>
 \fC dont-use-colors = <any value means yes, empty no>
 \fC savegame-path = <directory-name>
 \fC enable-xterm-graphics = <any value means yes, empty no>
@@ -339,7 +349,7 @@ image files.
 Fizmo was written in 2005\[en]2011 by Christoph Ender.
 
 .SH BUGS
-Fizmo is still in beta stage and I couldn't test all the games out there, so
-there will be some for sure. If you find them, please send an e-mail to
+Fizmo is still in beta stage and will probably still contain some unknown
+bugs. If you stumble upon one, please send an e-mail to
 fizmo@spellbreaker.org.
 
