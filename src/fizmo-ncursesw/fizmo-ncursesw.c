@@ -88,8 +88,8 @@ static struct itimerval empty_timerval;
 static bool use_xterm_title = false;
 static int ncursesw_argc;
 static char **ncursesw_argv;
-static bool use_bold_for_bright_foreground = false;
-static bool use_blink_for_bright_background = false;
+//static bool use_bold_for_bright_foreground = false;
+//static bool use_blink_for_bright_background = false;
 static bool dont_update_story_list_on_start = false;
 static bool directory_was_searched = false;
 static WORDWRAP *infowin_output_wordwrapper;
@@ -502,17 +502,20 @@ static void print_startup_syntax()
       i18n_ncursesw_SET_BACKGROUND_COLOR);
   streams_latin1_output("\n");
 
+  /*
   streams_latin1_output( " -bf, --bold-for-bright-foreground: ");
   i18n_translate(
       fizmo_ncursesw_module_name,
       i18n_ncursesw_USE_BOLD_FOR_BRIGHT_FOREGROUND_COLORS);
   streams_latin1_output("\n");
 
+
   streams_latin1_output( " -bb, --blink-for-bright-background: ");
   i18n_translate(
       fizmo_ncursesw_module_name,
       i18n_ncursesw_USE_BLINK_FOR_BRIGHT_BACKGROUND_COLORS);
   streams_latin1_output("\n");
+  */
 
   streams_latin1_output( " -nc, --dont-use-colors: ");
   i18n_translate(
@@ -2335,6 +2338,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
       argi++;
     }
+    /*
     else if (
         (strcmp(argv[argi], "-bf") == 0)
         ||
@@ -2353,6 +2357,7 @@ int main(int argc, char *argv[])
       use_blink_for_bright_background = true;
       argi ++;
     }
+    */
     else if (
         (strcmp(argv[argi], "-um") == 0)
         ||
