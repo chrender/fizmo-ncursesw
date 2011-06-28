@@ -435,9 +435,9 @@ static void print_startup_syntax()
       i18n_ncursesw_COLORS_AVAILABLE);
   streams_latin1_output(": ");
 
-  for (i=0; i<NOF_Z_COLOURS; i++)
+  for (i=Z_COLOUR_BLACK; i<=Z_COLOUR_WHITE; i++)
   {
-    if (i != 0)
+    if (i != Z_COLOUR_BLACK)
       streams_latin1_output(", ");
     streams_latin1_output(z_colour_names[i]);
   }
@@ -646,6 +646,7 @@ static int parse_config_parameter(char *key, char *value)
       use_xterm_title = true;
     else
       use_xterm_title = false;
+    free(value);
     return 0;
   }
   else if (strcmp(key, "disable-x11-graphics") == 0)
@@ -662,6 +663,7 @@ static int parse_config_parameter(char *key, char *value)
     else
       enable_x11_graphics = true;
 #endif // ENABLE_X11_IMAGES
+    free(value);
     return 0;
   }
   else if (strcmp(key, "display-x11-inline-image") == 0)
@@ -678,6 +680,7 @@ static int parse_config_parameter(char *key, char *value)
     else
       enable_x11_inline_graphics = false;
 #endif // ENABLE_X11_IMAGES
+    free(value);
     return 0;
   }
   else if (strcmp(key, "dont-update-story-list") == 0)
@@ -690,6 +693,7 @@ static int parse_config_parameter(char *key, char *value)
         (strcmp(value, config_true_value) == 0)
        )
       dont_update_story_list_on_start = true;
+    free(value);
     return 0;
   }
   else
