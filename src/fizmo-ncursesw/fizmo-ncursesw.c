@@ -472,6 +472,12 @@ static void print_startup_syntax()
       i18n_ncursesw_START_GAME_WITH_TRANSCRIPT_ENABLED);
   streams_latin1_output("\n");
 
+  streams_latin1_output( " -tf, --transcript-filename: ");
+  i18n_translate(
+      fizmo_ncursesw_module_name,
+      i18n_ncursesw_SET_TRANSCRIPT_FILENAME);
+  streams_latin1_output("\n");
+
   streams_latin1_output( " -rc, --record-commands: ");
   i18n_translate(
       fizmo_ncursesw_module_name,
@@ -488,6 +494,12 @@ static void print_startup_syntax()
   i18n_translate(
       fizmo_ncursesw_module_name,
       i18n_ncursesw_FILENAME_TO_READ_COMMANDS_FROM);
+  streams_latin1_output("\n");
+
+  streams_latin1_output( " -rf, --record-filename: ");
+  i18n_translate(
+      fizmo_ncursesw_module_name,
+      i18n_ncursesw_FILENAME_TO_RECORD_INPUT_TO);
   streams_latin1_output("\n");
 
   streams_latin1_output( " -f,  --foreground-color: ");
@@ -2308,8 +2320,37 @@ int main(int argc, char *argv[])
     else if ((strcmp(argv[argi], "-if") == 0)
         || (strcmp(argv[argi], "--input-filename") == 0))
     {
+      if (++argi == argc)
+      {
+        print_startup_syntax();
+        exit(EXIT_FAILURE);
+      }
       set_configuration_value(
-          "command-filename", argv[argi]);
+          "input-command-filename", argv[argi]);
+      argi += 1;
+    }
+    else if ((strcmp(argv[argi], "-rf") == 0)
+        || (strcmp(argv[argi], "--record-filename") == 0))
+    {
+      if (++argi == argc)
+      {
+        print_startup_syntax();
+        exit(EXIT_FAILURE);
+      }
+      set_configuration_value(
+          "record-command-filename", argv[argi]);
+      argi += 1;
+    }
+    else if ((strcmp(argv[argi], "-tf") == 0)
+        || (strcmp(argv[argi], "--transcript-filename") == 0))
+    {
+      if (++argi == argc)
+      {
+        print_startup_syntax();
+        exit(EXIT_FAILURE);
+      }
+      set_configuration_value(
+          "transcript-filename", argv[argi]);
       argi += 1;
     }
     else if (

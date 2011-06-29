@@ -85,6 +85,8 @@
 #define i18n_ncursesw_ENABLE_X11_INLINE_GRAPHICS 49
 #define i18n_ncursesw_LIBDRILBO_VERSION_P0S 50
 #define i18n_ncursesw_DISABLE_HYPHENATION 51
+#define i18n_ncursesw_SET_TRANSCRIPT_FILENAME 52
+#define i18n_ncursesw_FILENAME_TO_RECORD_INPUT_TO 53
 
 extern z_ucs fizmo_ncursesw_module_name[];
 
