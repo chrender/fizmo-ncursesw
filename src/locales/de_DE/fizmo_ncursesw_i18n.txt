@@ -51,4 +51,4 @@ X11-Inline-Grafik aktivieren.
 libdrilbo version \{0s}.
 Worttrennung deaktivieren.
 Dateiname für Transcript festlegen.
-Name der Datei in welche Benutzereingaben geschrieben werden.
+Name der Datei zum Speichern der Benutzereingaben.
