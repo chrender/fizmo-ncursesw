@@ -56,6 +56,8 @@
 #include <interpreter/config.h>
 #include <interpreter/filelist.h>
 #include <interpreter/wordwrap.h>
+#include <interpreter/blorb.h>
+#include <interpreter/savegame.h>
 #include <screen_interface/screen_cell_interface.h>
 #include <cell_interface/cell_interface.h>
 
@@ -1156,34 +1158,12 @@ int wait_for_x11_callback()
 
 static int display_X11_image_window(int image_no)
 {
-  struct z_story_blorb_image *image_blorb_index;
+  //long image_blorb_index;
   char *env_window_id;
   XID window_id;
 
-  image_blorb_index = get_image_blorb_index(active_z_story, image_no);
-
-  fsi->setfilepos(
-      active_z_story->blorb_file,
-      image_blorb_index->blorb_offset,
-      SEEK_SET);
-
-  if (image_blorb_index->type == Z_BLORB_IMAGE_PNG)
-  {
-    if ((frontispiece = read_zimage_from_png(active_z_story->blorb_file))
-      == NULL)
-      return -1;
-  }
-  else if (image_blorb_index->type == Z_BLORB_IMAGE_JPEG)
-  {
-    if ((frontispiece = read_zimage_from_jpeg(active_z_story->blorb_file))
-        == NULL)
-      return -1;
-  }
-  else
-  {
-    //FIXME: Quit / Warn of unsupported (undefined?) image type.
-    return -2;
-  }
+  if ((frontispiece = get_blorb_image(image_no)) == NULL)
+    return -1;
 
   env_window_id = getenv("WINDOWID");
   if ( (env_window_id != NULL) && (enable_x11_inline_graphics == true) )
@@ -1211,6 +1191,7 @@ static int display_X11_image_window(int image_no)
 static void link_interface_to_story(struct z_story *story)
 {
   int flags;
+  int frontispiece_resource_number;
 
   initscr();
   keypad(stdscr, TRUE);
@@ -1262,10 +1243,15 @@ static void link_interface_to_story(struct z_story *story)
     printf("%c]0;%s%c", 033, active_z_story->title, 007);
 
 #ifdef ENABLE_X11_IMAGES
-  TRACE_LOG("frontispiece: %d.\n", active_z_story->frontispiece_image_no);
-  if ( (active_z_story->frontispiece_image_no >= 0)
-      && (enable_x11_graphics != false) )
-    display_X11_image_window(active_z_story->frontispiece_image_no);
+  frontispiece_resource_number
+    = active_blorb_interface->get_frontispiece_resource_number(
+        active_z_story->blorb_map);
+
+  if ( (frontispiece_resource_number >= 0) && (enable_x11_graphics != false) )
+  {
+    TRACE_LOG("frontispiece resnum: %d.\n", frontispiece_resource_number)
+    display_X11_image_window(frontispiece_resource_number);
+  }
 #endif // ENABLE_X11_IMAGES
 }
 
@@ -1555,24 +1541,6 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
 
         TRACE_LOG("pipe event.\n");
 
-        if (errno != 0)
-        {
-          if (errno == EINTR)
-          {
-            errno = 0;
-            continue;
-          }
-          else
-          {
-            i18n_translate_and_exit(
-                fizmo_ncursesw_module_name,
-                i18n_ncursesw_ERROR_P0D_OCCURED_BEFORE_READ_P1S,
-                -0x203d,
-                errno,
-                strerror(errno));
-          }
-        }
-
         bytes_read = 0;
 
         while (bytes_read != sizeof(int))
@@ -1637,7 +1605,20 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
     }
     else
     {
-      TRACE_LOG("select returned <=0, current errno: %d.\n", errno);
+      if (errno == EINTR)
+        errno = 0;
+      else
+      {
+        TRACE_LOG("select returned <=0, current errno: %d.\n", errno);
+        /*
+        i18n_translate_and_exit(
+            fizmo_ncursesw_module_name,
+            i18n_ncursesw_ERROR_P0D_OCCURED_BEFORE_READ_P1S,
+            -0x203d,
+            errno,
+            strerror(errno));
+        */
+      }
     }
   }
 
@@ -1651,7 +1632,9 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
 
 void update_screen()
 {
+  TRACE_LOG("refresh errno: %d.\n", errno);
   refresh();
+  TRACE_LOG("refresh errno: %d.\n", errno);
 }
 
 
@@ -1859,6 +1842,7 @@ static char *select_story_from_menu()
   short menucolorpair = -1;
   char *config_disablecolor;
 
+#ifndef DISABLE_FILELIST
   story_list
     = dont_update_story_list_on_start != true
     ? update_fizmo_story_list()
@@ -1875,6 +1859,7 @@ static char *select_story_from_menu()
     //set_configuration_value("locale", fizmo_locale, "fizmo");
     return NULL;
   }
+#endif // DISABLE_FILELIST
 
   sigemptyset(&default_sigaction.sa_mask);
   default_sigaction.sa_flags = 0;
@@ -2114,21 +2099,6 @@ static char *select_story_from_menu()
       }
       else
       {
-        if (errno != 0)
-        {
-          if (errno == EINTR)
-          { errno = 0; continue; }
-          else
-          {
-            i18n_translate_and_exit(
-                fizmo_ncursesw_module_name,
-                i18n_ncursesw_ERROR_P0D_OCCURED_BEFORE_READ_P1S,
-                -0x203c,
-                errno,
-                strerror(errno));
-          }
-        }
-
         bytes_read = 0;
 
         while (bytes_read != sizeof(int))
@@ -2170,9 +2140,23 @@ static char *select_story_from_menu()
         }
       }
     }
+    else if (select_retval < 0)
+    {
+      if (errno == EINTR)
+        errno = 0;
+      else
+        i18n_translate_and_exit(
+            fizmo_ncursesw_module_name,
+            i18n_ncursesw_ERROR_P0D_OCCURED_BEFORE_READ_P1S,
+            -0x203c,
+            errno,
+            strerror(errno));
+    }
   }
 
+#ifndef DISABLE_FILELIST
   free_z_story_list(story_list);
+#endif // DISABLE_FILELIST
   delwin(infowin);
   erase();
   move(0,0);
@@ -2229,12 +2213,19 @@ int main(int argc, char *argv[])
   int argi = 1;
   int story_filename_parameter_number = -1;
   int blorb_filename_parameter_number = -1;
-  char *story_file;
+  char *input_file;
+  z_file *savegame_to_restore= NULL;
+  z_file *story_stream = NULL, *blorb_stream = NULL;
   int flags;
   int int_value;
   char *cwd = NULL;
   char *absdirname = NULL;
+#ifndef DISABLE_FILELIST
+  char *story_to_load_filename, *assumed_filename;
+  struct z_story_list *story_list;
   size_t absdirname_len = 0;
+  int i;
+#endif // DISABLE_FILELIST
 
 #ifdef ENABLE_TRACING
   turn_on_trace();
@@ -2252,7 +2243,9 @@ int main(int argc, char *argv[])
   // Parsing must occur after "fizmo_register_screen_cell_interface" so
   // that fizmo knows where to forward "parse_config_parameter" parameters
   // to.
+#ifndef DISABLE_CONFIGFILES
   parse_fizmo_config_files();
+#endif // DISABLE_CONFIGFILES
 
   ncursesw_argc = argc;
   ncursesw_argv = argv;
@@ -2283,6 +2276,8 @@ int main(int argc, char *argv[])
         print_startup_syntax();
         exit(EXIT_FAILURE);
       }
+
+      set_configuration_value("dont-set-locale-from-config", "true");
       argi++;
     }
     else if ((strcmp(argv[argi], "-pr") == 0)
@@ -2550,6 +2545,7 @@ int main(int argc, char *argv[])
       dont_update_story_list_on_start = true;
       argi += 1;
     }
+#ifndef DISABLE_FILELIST
     else if (
         (strcmp(argv[argi], "-u") == 0)
         ||
@@ -2631,6 +2627,7 @@ int main(int argc, char *argv[])
 
       argi += 1;
     }
+#endif // DISABLE_FILELIST
     else if (
         (strcmp(argv[argi], "-sy") == 0)
         ||
@@ -2665,6 +2662,67 @@ int main(int argc, char *argv[])
 
   if (directory_was_searched == true)
     exit(EXIT_SUCCESS);
+
+  if (story_filename_parameter_number == -1)
+  {
+#ifndef DISABLE_FILELIST
+    if ((input_file = select_story_from_menu()) == NULL)
+      return 0;
+    story_stream = fsi->openfile(
+        input_file, FILETYPE_DATA, FILEACCESS_READ);
+#endif // DISABLE_FILELIST
+  }
+  else
+  {
+    // The user has given some filename or description name on the command line.
+    input_file = argv[story_filename_parameter_number];
+
+    // First, test if this may be the filename for a savegame.
+#ifndef DISABLE_FILELIST
+    // We can only restore saved games directly from the save file in
+    // case the filelist functionality exists.
+    if (detect_saved_game(input_file, &story_to_load_filename) == true)
+    {
+      // User provided a savegame name on the command line.
+      savegame_to_restore = fsi->openfile(
+          input_file, FILETYPE_DATA, FILEACCESS_READ);
+      story_stream = fsi->openfile(
+          story_to_load_filename, FILETYPE_DATA, FILEACCESS_READ);
+    }
+    else
+    {
+#endif // DISABLE_FILELIST
+      // Check if parameter is a valid filename.
+      if ((story_stream = fsi->openfile(
+              input_file, FILETYPE_DATA, FILEACCESS_READ)) == NULL)
+      {
+#ifndef DISABLE_FILELIST
+        // In case it's not a regular file, use the filelist to find
+        // something similiar.
+        story_list = get_z_story_list();
+        for (i=0; i<story_list->nof_entries; i++)
+        {
+          if (strcasecmp(story_list->entries[i]->title, input_file) == 0)
+          {
+            assumed_filename = fizmo_strdup(story_list->entries[i]->filename);
+            story_stream = fsi->openfile(
+                assumed_filename, FILETYPE_DATA, FILEACCESS_READ);
+            break;
+          }
+        }
+        free_z_story_list(story_list);
+#endif // DISABLE_FILELIST
+      }
+#ifndef DISABLE_FILELIST
+    }
+#endif // DISABLE_FILELIST
+  }
+
+  if (story_stream == NULL)
+  {
+    puts("No story stream.\n");
+    exit(1);
+  }
 
   timerval.it_interval.tv_sec = 0;
   timerval.it_interval.tv_usec = 0;
@@ -2712,30 +2770,24 @@ int main(int argc, char *argv[])
   sigaction(SIGALRM, &default_sigaction, NULL);
   //sigaction(SIGWINCH, &default_sigaction, NULL);
 
-  if (story_filename_parameter_number == -1)
-  {
-    if ((story_file = select_story_from_menu()) == NULL)
-      return 0;
-  }
-  else
-    story_file = argv[story_filename_parameter_number];
-
   sigemptyset(&default_sigaction.sa_mask);
   default_sigaction.sa_flags = 0;
   default_sigaction.sa_handler = &ncursesw_if_catch_signal;
   sigaction(SIGWINCH, &default_sigaction, NULL);
 
+  if (blorb_filename_parameter_number != -1)
+    blorb_stream = fsi->openfile(
+        argv[blorb_filename_parameter_number], FILETYPE_DATA, FILEACCESS_READ);
+
   fizmo_start(
-      story_file,
-      (blorb_filename_parameter_number != -1
-       ? argv[blorb_filename_parameter_number]
-       : NULL),
-      NULL);
+      story_stream,
+      blorb_stream,
+      savegame_to_restore);
 
   sigaction(SIGWINCH, NULL, NULL);
 
   if (story_filename_parameter_number == -1)
-    free(story_file);
+    free(input_file);
 
   TRACE_LOG("Closing signalling pipes.\n");
 
