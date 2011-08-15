@@ -67,7 +67,7 @@
 
 #include "../locales/fizmo_ncursesw_locales.h"
 
-#define FIZMO_NCURSESW_VERSION "0.7.0-b10"
+#define FIZMO_NCURSESW_VERSION "0.7.0-b11"
 
 #ifdef ENABLE_X11_IMAGES
 #include <drilbo/drilbo.h>
@@ -2081,6 +2081,30 @@ static char *select_story_from_menu()
           if (selected == storywin_height + scroll_index)
             scroll_index++; 
           infowin_topindex = 0;
+        }
+        else if (input == KEY_NPAGE)
+        {
+          scroll_index += storywin_height;
+          selected += storywin_height;
+          if (scroll_index >= story_list->nof_entries)
+          {
+            scroll_index = story_list->nof_entries - storywin_height;
+            selected = story_list->nof_entries - 1;
+
+            if (scroll_index < 0)
+              scroll_index = 0;
+          }
+          infowin_topindex = 0;
+        }
+        else if (input == KEY_PPAGE)
+        {
+          scroll_index -= storywin_height;
+          selected -= storywin_height;
+          if (scroll_index < 0)
+          {
+            scroll_index = 0;
+            selected = 0;
+          }
         }
         else if (input == 27)
         {
