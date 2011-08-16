@@ -1523,6 +1523,8 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
             result = EVENT_WAS_CODE_CTRL_A;
           else if (input == 5)
             result = EVENT_WAS_CODE_CTRL_E;
+          else if (input == 27)
+            result = EVENT_WAS_CODE_ESC;
           else
           {
             result = EVENT_WAS_INPUT;
