@@ -58,6 +58,7 @@
 #include <interpreter/wordwrap.h>
 #include <interpreter/blorb.h>
 #include <interpreter/savegame.h>
+#include <interpreter/output.h>
 #include <screen_interface/screen_cell_interface.h>
 #include <cell_interface/cell_interface.h>
 
@@ -76,8 +77,6 @@
 #include <drilbo/drilbo-x11.h>
 #endif //ENABLE_X11_IMAGES
 
-#define NCURSESW_COLOUR_CLASS_FOREGROUND 0
-#define NCURSESW_COLOUR_CLASS_BACKGROUND 1
 #define NCURSESW_WCHAR_T_BUF_SIZE 64
 #define NCURSESW_Z_UCS_BUF_SIZE 32
 #define NCURSESW_OUTPUT_CHAR_BUF_SIZE 80
@@ -90,8 +89,6 @@ static struct itimerval empty_timerval;
 static bool use_xterm_title = false;
 static int ncursesw_argc;
 static char **ncursesw_argv;
-//static bool use_bold_for_bright_foreground = false;
-//static bool use_blink_for_bright_background = false;
 static bool dont_update_story_list_on_start = false;
 static bool directory_was_searched = false;
 static WORDWRAP *infowin_output_wordwrapper;
@@ -106,6 +103,8 @@ static wchar_t wchar_t_buf[NCURSESW_WCHAR_T_BUF_SIZE];
 static z_ucs z_ucs_t_buf[NCURSESW_Z_UCS_BUF_SIZE];
 static char output_char_buf[NCURSESW_OUTPUT_CHAR_BUF_SIZE];
 static bool ncursesw_interface_open = false;
+static z_colour screen_default_foreground_color = -1;
+static z_colour screen_default_background_color = -1;
 
 static int n_color_pairs_in_use;
 static int n_color_pairs_available;
@@ -148,6 +147,29 @@ static char *config_option_names[] = {
   "dont-update-story-list",
   NULL
 };
+
+
+static z_colour colorname_to_infocomcode(char *colorname)
+{
+  if      (strcmp(colorname, "black") == 0)
+    return Z_COLOUR_BLACK;
+  else if (strcmp(colorname, "red") == 0)
+    return Z_COLOUR_RED;
+  else if (strcmp(colorname, "green") == 0)
+    return Z_COLOUR_GREEN;
+  else if (strcmp(colorname, "yellow") == 0)
+    return Z_COLOUR_YELLOW;
+  else if (strcmp(colorname, "blue") == 0)
+    return Z_COLOUR_BLUE;
+  else if (strcmp(colorname, "magenta") == 0)
+    return Z_COLOUR_MAGENTA;
+  else if (strcmp(colorname, "cyan") == 0)
+    return Z_COLOUR_CYAN;
+  else if (strcmp(colorname, "white") == 0)
+    return Z_COLOUR_WHITE;
+  else
+    return -1;
+}
 
 
 static z_ucs *z_ucs_string_to_wchar_t(wchar_t *dest, z_ucs *src,
@@ -765,34 +787,19 @@ static char **get_config_option_names()
 }
 
 
-static int z_to_curses_colour(z_colour z_colour_to_convert,
-    int colour_class)
+static int z_to_curses_colour(z_colour z_colour_to_convert)
 {
-  if (z_colour_to_convert == Z_COLOUR_DEFAULT)
+  switch (z_colour_to_convert)
   {
-    if (colour_class == NCURSESW_COLOUR_CLASS_FOREGROUND)
-      return z_to_curses_colour(
-          default_foreground_colour, NCURSESW_COLOUR_CLASS_FOREGROUND);
-    else if (colour_class == NCURSESW_COLOUR_CLASS_BACKGROUND)
-      return z_to_curses_colour(
-          default_background_colour, NCURSESW_COLOUR_CLASS_BACKGROUND);
-    else
-      return -1;
-  }
-  else
-  {
-    switch (z_colour_to_convert)
-    {
-      case Z_COLOUR_BLACK:   return COLOR_BLACK;
-      case Z_COLOUR_RED:     return COLOR_RED;
-      case Z_COLOUR_GREEN:   return COLOR_GREEN;
-      case Z_COLOUR_YELLOW:  return COLOR_YELLOW;
-      case Z_COLOUR_BLUE:    return COLOR_BLUE;
-      case Z_COLOUR_MAGENTA: return COLOR_MAGENTA;
-      case Z_COLOUR_CYAN:    return COLOR_CYAN;
-      case Z_COLOUR_WHITE:   return COLOR_WHITE;
-      default:               return -1;
-    }
+    case Z_COLOUR_BLACK:   return COLOR_BLACK;
+    case Z_COLOUR_RED:     return COLOR_RED;
+    case Z_COLOUR_GREEN:   return COLOR_GREEN;
+    case Z_COLOUR_YELLOW:  return COLOR_YELLOW;
+    case Z_COLOUR_BLUE:    return COLOR_BLUE;
+    case Z_COLOUR_MAGENTA: return COLOR_MAGENTA;
+    case Z_COLOUR_CYAN:    return COLOR_CYAN;
+    case Z_COLOUR_WHITE:   return COLOR_WHITE;
+    default:               return -1;
   }
 }
 
@@ -835,13 +842,8 @@ static short get_color_pair(z_colour z_foreground_colour,
       z_foreground_colour, z_background_colour);
 
   // Convert color codes from infocom to curses.
-  curses_foreground_color
-    = z_to_curses_colour(
-        z_foreground_colour, NCURSESW_COLOUR_CLASS_FOREGROUND);
-
-  curses_background_color
-    = z_to_curses_colour(
-        z_background_colour, NCURSESW_COLOUR_CLASS_BACKGROUND);
+  curses_foreground_color = z_to_curses_colour(z_foreground_colour);
+  curses_background_color = z_to_curses_colour(z_background_colour);
 
   TRACE_LOG("Looking for color pair %d / %d.\n",
       curses_foreground_color, curses_background_color);
@@ -1779,6 +1781,18 @@ static void set_cursor_visibility(bool visible)
 }
 
 
+static z_colour get_default_foreground_colour()
+{
+  return Z_COLOUR_WHITE;
+}
+
+
+static z_colour get_default_background_colour()
+{
+  return Z_COLOUR_BLACK;
+}
+
+
 static struct z_screen_cell_interface ncursesw_interface =
 {
   &goto_yx,
@@ -1808,7 +1822,9 @@ static struct z_screen_cell_interface ncursesw_interface =
   &copy_area,
   &clear_to_eol,
   &clear_area,
-  &set_cursor_visibility
+  &set_cursor_visibility,
+  &get_default_foreground_colour,
+  &get_default_background_colour
 };
 
 
@@ -2246,6 +2262,7 @@ int main(int argc, char *argv[])
   int int_value;
   char *cwd = NULL;
   char *absdirname = NULL;
+  z_colour new_color;
 #ifndef DISABLE_FILELIST
   char *story_to_load_filename, *assumed_filename;
   struct z_story_list *story_list;
@@ -2383,8 +2400,14 @@ int main(int argc, char *argv[])
         print_startup_syntax();
         exit(EXIT_FAILURE);
       }
-      else if (set_configuration_value("background-color", argv[argi]) != 0)
+
+      if ((new_color = colorname_to_infocomcode(argv[argi])) == -1)
+      {
+        print_startup_syntax();
         exit(EXIT_FAILURE);
+      }
+
+      screen_default_background_color = new_color;
       argi++;
     }
     else if (
@@ -2396,30 +2419,16 @@ int main(int argc, char *argv[])
         print_startup_syntax();
         exit(EXIT_FAILURE);
       }
-      else if (set_configuration_value("foreground-color", argv[argi]) != 0)
+
+      if ((new_color = colorname_to_infocomcode(argv[argi])) == -1)
+      {
+        print_startup_syntax();
         exit(EXIT_FAILURE);
+      }
+
+      screen_default_foreground_color = new_color;
       argi++;
     }
-    /*
-    else if (
-        (strcmp(argv[argi], "-bf") == 0)
-        ||
-        (strcmp(argv[argi], "--bold-for-bright-foreground") == 0)
-        )
-    {
-      use_bold_for_bright_foreground = true;
-      argi ++;
-    }
-    else if (
-        (strcmp(argv[argi], "-bb") == 0)
-        ||
-        (strcmp(argv[argi], "--blink-for-bright-background") == 0)
-        )
-    {
-      use_blink_for_bright_background = true;
-      argi ++;
-    }
-    */
     else if (
         (strcmp(argv[argi], "-um") == 0)
         ||
@@ -2808,7 +2817,9 @@ int main(int argc, char *argv[])
   fizmo_start(
       story_stream,
       blorb_stream,
-      savegame_to_restore);
+      savegame_to_restore,
+      screen_default_foreground_color,
+      screen_default_background_color);
 
   sigaction(SIGWINCH, NULL, NULL);
 
