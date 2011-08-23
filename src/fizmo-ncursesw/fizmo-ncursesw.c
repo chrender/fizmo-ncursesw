@@ -1589,7 +1589,12 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
 
         if (new_signal == SIGALRM)
         {
-          result = EVENT_WAS_TIMEOUT;
+          if (timeout_millis > 0)
+          {
+            TRACE_LOG("Timeout.\n");
+            result = EVENT_WAS_TIMEOUT;
+            input_should_terminate = true;
+          }
         }
         else if (new_signal == SIGWINCH)
         {
@@ -1602,6 +1607,7 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
           refresh_screen_size();
           //TRACE_LOG("New dimensions: %dx%d.\n", screen_width, screen_height);
           //new_cell_screen_size(screen_height, screen_width);
+          input_should_terminate = true;
         }
         else
         {
@@ -1610,8 +1616,6 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
               i18n_ncursesw_UNKNOWN_ERROR_CASE,
               -0x2041);
         }
-
-        input_should_terminate = true;
       }
     }
     else
@@ -2762,8 +2766,12 @@ int main(int argc, char *argv[])
 
   if (story_stream == NULL)
   {
-    puts("No story stream.\n");
-    exit(1);
+    i18n_translate_and_exit(
+        fizmo_ncursesw_module_name,
+        i18n_ncursesw_COULD_NOT_OPEN_OR_FIND_P0S,
+        -0x2016,
+        input_file);
+    exit(EXIT_FAILURE);
   }
 
   timerval.it_interval.tv_sec = 0;
@@ -2810,7 +2818,6 @@ int main(int argc, char *argv[])
   default_sigaction.sa_flags = 0;
   default_sigaction.sa_handler = &catch_signal;
   sigaction(SIGALRM, &default_sigaction, NULL);
-  //sigaction(SIGWINCH, &default_sigaction, NULL);
 
   sigemptyset(&default_sigaction.sa_mask);
   default_sigaction.sa_flags = 0;
