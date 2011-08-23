@@ -87,6 +87,7 @@
 #define i18n_ncursesw_DISABLE_HYPHENATION 51
 #define i18n_ncursesw_SET_TRANSCRIPT_FILENAME 52
 #define i18n_ncursesw_FILENAME_TO_RECORD_INPUT_TO 53
+#define i18n_ncursesw_COULD_NOT_OPEN_OR_FIND_P0S 54
 
 extern z_ucs fizmo_ncursesw_module_name[];
 

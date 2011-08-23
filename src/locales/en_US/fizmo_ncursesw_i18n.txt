@@ -52,3 +52,4 @@ libdrilbo version \{0s}.
 Disable hyphenation.
 Set transcript filename.
 Filename to record input to.
+Could not open or find "\{0s}".
