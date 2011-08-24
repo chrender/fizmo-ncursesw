@@ -205,10 +205,17 @@ static void infowin_z_ucs_output_wordwrap_destination(z_ucs *z_ucs_output,
 {
   z_ucs *ptr;
   int y,x;
+#ifdef ENABLE_TRACING
+  z_ucs buf;
+#endif // ENABLE_TRACING
 
   if (infowin_full == true)
     return;
 
+  // In case we're supposed to skip some story description in case the user
+  // has scrolled down, loop here until we're at the "infowin_topindex", at the
+  // point we're supposed to start output.
+  TRACE_LOG("line length: %d\n", infowin_width - infowin_skip_x);
   if (infowin_lines_skipped < infowin_topindex)
   {
     while (
@@ -217,43 +224,76 @@ static void infowin_z_ucs_output_wordwrap_destination(z_ucs *z_ucs_output,
         ((long)z_ucs_len(z_ucs_output) >= infowin_width - infowin_skip_x)
         )
     {
+      TRACE_LOG("loop: ptr:%p, len:%d.\n", ptr, (long)z_ucs_len(z_ucs_output));
       if (ptr != NULL)
       {
-        if (ptr - z_ucs_output >= infowin_width - infowin_skip_x)
+#ifdef ENABLE_TRACING
+        buf = *ptr;
+        *ptr = 0;
+        TRACE_LOG("skip infowin output: \"");
+        TRACE_LOG_Z_UCS(z_ucs_output);
+        TRACE_LOG("\"\n");
+        *ptr = buf;
+#endif // ENABLE_TRACING
+
+        TRACE_LOG("diff: %d, %d\n",
+            ptr - z_ucs_output, infowin_width - infowin_skip_x);
+        if (ptr - z_ucs_output > infowin_width - infowin_skip_x)
           z_ucs_output += infowin_width - infowin_skip_x;
         else
           z_ucs_output = ptr + 1;
       }
       else
-        z_ucs_output += infowin_width - infowin_skip_x;
+      {
+        TRACE_LOG("overlong line, skipping %d chars.\n",
+            infowin_width - infowin_skip_x);
+        z_ucs_output += (infowin_width - infowin_skip_x);
+      }
 
       if (++infowin_lines_skipped == infowin_topindex)
+      {
+        TRACE_LOG("break after: infowin_lines_skipped: %d\n", infowin_lines_skipped);
         break;
+      }
     }
 
     infowin_skip_x = z_ucs_len(z_ucs_output);
 
+    TRACE_LOG("infowin_lines_skipped: %d\n", infowin_lines_skipped);
     if (infowin_lines_skipped < infowin_topindex)
       return;
   }
 
+  // At this point we've skipped all required lines. Skip any newline we come
+  // accross before starting the true output.
+  /*
   if (infowin_lines_skipped == infowin_topindex)
   {
     while (*z_ucs_output == Z_UCS_NEWLINE)
       z_ucs_output++;
     infowin_lines_skipped++;
   }
+  */
 
+  // Display output. Output will be either the supplied "z_ucs_output", or the
+  // "infowin_more" message in case we're at the bottom of the infowin page.
+
+  // Determine if we're at the bottom and adjust output contents in this case.
   getyx(infowin, y, x);
-  if (y >= infowin_height)
+  if (y == infowin_height - 1)
   {
+    TRACE_LOG("infowin full.\n");
     infowin_full = true;
     waddstr(infowin, "[");
     z_ucs_output = infowin_more;
   }
 
+  // Display output.
   while (z_ucs_output != NULL)
   {
+    TRACE_LOG("infowin output: \"");
+    TRACE_LOG_Z_UCS(z_ucs_output);
+    TRACE_LOG("\"\n");
     z_ucs_output = z_ucs_string_to_wchar_t(
         wchar_t_buf,
         z_ucs_output,
@@ -264,6 +304,7 @@ static void infowin_z_ucs_output_wordwrap_destination(z_ucs *z_ucs_output,
     waddwstr(infowin, wchar_t_buf);
   }
 
+  // Add closing bracket in case we're displaying the "infowin_more" message.
   if (infowin_full == true)
     waddstr(infowin, "]");
 }
@@ -1952,7 +1993,8 @@ static char *select_story_from_menu()
       storywin_width = x / 3;
       story_title_length = storywin_width - 9;
 
-      infowin_height = storywin_height - 1;
+      infowin_height = storywin_height;
+      TRACE_LOG("infowin_height: %d.\n", infowin_height);
       infowin_width = x - storywin_width - storywin_x - 9;
       infowin_topindex = 0;
 
@@ -2143,11 +2185,13 @@ static char *select_story_from_menu()
         else if ( (input == ' ') && (infowin_full == true) )
         {
           infowin_topindex += (infowin_height - 5);
+          TRACE_LOG("New infowin_topindex: %d.\n", infowin_topindex);
         }
         else if (input == 'b')
         {
           if ((infowin_topindex -= (infowin_height - 5)) < 0)
             infowin_topindex = 0;
+          TRACE_LOG("New infowin_topindex: %d.\n", infowin_topindex);
         }
       }
       else
