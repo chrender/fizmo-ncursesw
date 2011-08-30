@@ -3,7 +3,7 @@ Set background color.
 Set left margin size.
 Set right margin size.
 Invalid configuration value "\{0s}" for option "\{1s}".
-Usage: fizmo [options] [storyfile | quetzal-savefile] [blorbfile]
+Usage: fizmo-ncursesw [options] [storyfile | quetzal-savefile] [blorbfile]
 Valid options are:
 Set locale name for interpreter messages.
 Start with random generator in predictable mode.

@@ -3,7 +3,7 @@ Hintergrundfarbe festlegen.
 Abstand zum rechten Rand festlegen.
 Abstand zum linken Rand festlegen.
 Ungültiger Konfigurationswert "\{0s}" für Option "\{1s}".
-Syntax: fizmo [optionen] [storyfile | quetzal-datei] [blorbfile]
+Syntax: fizmo-ncursesw [optionen] [storyfile | quetzal-datei] [blorbfile]
 Gültige Optionen sind:
 Lokalisierung für Interpretermeldungen setzen.
 Zufallsgenerator im berechenbaren Modus starten.
