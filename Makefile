@@ -18,7 +18,7 @@ src/fizmo-ncursesw/fizmo-ncursesw::
 install: src/fizmo-ncursesw/fizmo-ncursesw
 	mkdir -p $(INSTALL_PREFIX)/$(INSTALL_BIN_DIR)
 	cp src/fizmo-ncursesw/fizmo-ncursesw $(INSTALL_PREFIX)/$(INSTALL_BIN_DIR)
-	mkdir -p $(INSTALL_PREFIX)/man/man6
+	mkdir -p $(INSTALL_PREFIX)/share/man/man6
 	cp src/man/fizmo-ncursesw.6 $(INSTALL_PREFIX)/man/man6
 	mkdir -p $(INSTALL_PREFIX)/share/fizmo/locales
 	for l in `cd src/locales ; ls -d ??_??`; \

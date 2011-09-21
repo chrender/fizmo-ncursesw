@@ -3,6 +3,7 @@
  + 0.7.1 was finished at about (?).
  - Fixed missing "override" statments for CFLAGS in Makefiles.
  - Fixed $(DESTDIR) evaluation in config.[default|macports].mk.
+ - Changed manpage install dir from "man" to "share/man".
 
    Version 0.7.0
  + 0.7.0 was finished at about Sun Sep 18 08:41:18 CEST 2011.
