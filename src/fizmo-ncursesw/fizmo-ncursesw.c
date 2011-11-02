@@ -204,8 +204,7 @@ static void infowin_z_ucs_output_wordwrap_destination(z_ucs *z_ucs_output,
     void *UNUSED(dummyparameter))
 {
   z_ucs *ptr;
-  int y;
-  int UNUSED(x);
+  int y,x;
 #ifdef ENABLE_TRACING
   z_ucs buf;
 #endif // ENABLE_TRACING
