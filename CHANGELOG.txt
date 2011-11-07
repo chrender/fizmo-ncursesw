@@ -6,6 +6,7 @@
  - Changed manpage install dir from "man" to "share/man".
  - Adapted Makefiles and configuration to use standard GNU Makefile variables
    instead of INSTALL_PATH and FIZMO_BIN_DIR.
+ - Respect LD_FLAGS for linking.
 
    Version 0.7.0
  + 0.7.0 was finished at about Sun Sep 18 08:41:18 CEST 2011.
