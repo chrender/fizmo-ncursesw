@@ -64,7 +64,7 @@ endif
 all: fizmo-ncursesw
 
 fizmo-ncursesw: fizmo-ncursesw.o ../locales/fizmo_ncursesw_locales.o
-	$(CC) $(CFLAGS) fizmo-ncursesw.o ../locales/fizmo_ncursesw_locales.o $(LIBS) -o fizmo-ncursesw
+	$(CC) $(LDFLAGS) fizmo-ncursesw.o ../locales/fizmo_ncursesw_locales.o $(LIBS) -o fizmo-ncursesw
 
 ../locales/fizmo_ncursesw_locales.o::
 	cd ../locales ; make
