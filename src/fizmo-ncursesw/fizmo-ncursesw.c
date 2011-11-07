@@ -204,7 +204,12 @@ static void infowin_z_ucs_output_wordwrap_destination(z_ucs *z_ucs_output,
     void *UNUSED(dummyparameter))
 {
   z_ucs *ptr;
-  int y,x;
+  int y;
+#ifdef __GNUC__
+  int __attribute__ ((unused)) x;
+#else
+  int x;
+#endif // __GNU_CC
 #ifdef ENABLE_TRACING
   z_ucs buf;
 #endif // ENABLE_TRACING
