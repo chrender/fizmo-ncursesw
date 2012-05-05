@@ -2278,6 +2278,9 @@ static char *select_story_from_menu()
   endwin();
   wordwrap_destroy_wrapper(infowin_output_wordwrapper);
 
+  free(infowin_more);
+  free(infowin_back);
+
   return result;
 }
 
@@ -2656,7 +2659,11 @@ int main(int argc, char *argv[])
         (strcmp(argv[argi], "--update-story-list") == 0))
     {
       printf("\n");
-      update_fizmo_story_list();
+      story_list = update_fizmo_story_list();
+      // Only update functionality is relevant, so we can forget the
+      // result right away.
+      if (story_list != NULL)
+        free_z_story_list(story_list);
       printf("\n");
       directory_was_searched = true;
       argi += 1;
