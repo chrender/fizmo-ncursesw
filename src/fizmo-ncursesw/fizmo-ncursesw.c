@@ -643,6 +643,12 @@ static void print_startup_syntax()
       i18n_ncursesw_DISABLE_HYPHENATION);
   streams_latin1_output("\n");
 
+  streams_latin1_output( " -mu, --maximum-undo-steps: ");
+  i18n_translate(
+      fizmo_ncursesw_module_name,
+      i18n_ncursesw_SET_NUMBER_OF_MAXIMUM_UNDO_STEPS);
+  streams_latin1_output("\n");
+
 #ifdef ENABLE_X11_IMAGES
   streams_latin1_output( " -nx, --disable-x11-graphics: ");
   i18n_translate(
@@ -2591,11 +2597,15 @@ int main(int argc, char *argv[])
     else if (
         (strcmp(argv[argi], "-lm") == 0)
         ||
-        (strcmp(argv[argi], "-rm") == 0)
-        ||
         (strcmp(argv[argi], "--left-margin") == 0)
         ||
+        (strcmp(argv[argi], "-rm") == 0)
+        ||
         (strcmp(argv[argi], "--right-margin") == 0)
+        ||
+        (strcmp(argv[argi], "-mu") == 0)
+        ||
+        (strcmp(argv[argi], "--maximum-undo-steps") == 0)
         )
     {
       if (++argi == argc)
@@ -2630,8 +2640,23 @@ int main(int argc, char *argv[])
           (strcmp(argv[argi - 1], "--left-margin") == 0)
          )
         set_custom_left_cell_margin(int_value);
-      else
+      else if (
+          (strcmp(argv[argi - 1], "-rm") == 0)
+          ||
+          (strcmp(argv[argi - 1], "--right-margin") == 0)
+          )
         set_custom_right_cell_margin(int_value);
+      else if (
+          (strcmp(argv[argi - 1], "-mu") == 0)
+          ||
+          (strcmp(argv[argi - 1], "--maximum-undo-steps") == 0)
+          )
+        set_configuration_value("max-undo-steps", argv[argi]);
+      else
+      {
+        // Internal mismatch, must not happen since we've already verified
+        // these values above.
+      }
 
       argi += 1;
     }
