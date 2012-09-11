@@ -10,7 +10,7 @@ AC_ARG_ENABLE([x11-images],
  [],
  [enable_x11_images=yes])
 
-AC_ARG_ENABLE([sdl-sound-a])
+AC_ARG_ENABLE([sdl-sound])
  [AS_HELP_STRING([--disable-sdl-sound],
                  [Disable sound support])],
  [],
@@ -39,7 +39,7 @@ PKG_CHECK_MODULES([libfizmo], [libfizmo >= 0.7.4])
 PKG_CHECK_MODULES([libcellif], [libcellif >= 0.7.4])
 PKG_CHECK_MODULES([libsndifsdl], [libsndifsdl >= 0.7.3])
 PKG_CHECK_MODULES([libdrilbo], [libdrilbo >= 0.2.3])
-PKG_CHECK_MODULES([ncursesw], [ncursesw])
+m4_include(config-libs.m4)
 
 AS_IF([test "x$enable_x11_images" != "xno"], [
   PKG_CHECK_MODULES([x11], [x11])
@@ -48,17 +48,8 @@ AS_IF([test "x$enable_x11_images" != "xno"], [
 AM_CONDITIONAL([ENABLE_TRACING],
                 [test "$enable_tracing" = "yes"])
 
-AM_CONDITIONAL([ENABLE_X11_IMAGES],
-                [test "$enable_x11_images" != "no"])
-
-AM_CONDITIONAL([ENABLE_SDL_SOUND],
-                [test "$enable_sdl_sound" != "no"])
-
-AM_CONDITIONAL([ENABLE_FILELIST],
-                [test "$enable_filelist" != "no"])
-
-AM_CONDITIONAL([ENABLE_CONFIG_FILES],
-                [test "$enable_config_files" != "no"])
+m4_include(config-conds.m4)
+m4_include(config-subst.m4)
 
 AC_SUBST([SOUND_INTERFACE_NAME], libsndifsdl)
 AC_SUBST([SOUND_INTERFACE_STRUCT_NAME], sound_interface_sdl)
