@@ -4,6 +4,7 @@
 localedir = $(datarootdir)/fizmo/locales
 
 SUBDIRS = src/fizmo-ncursesw
+man6_MANS = src/man/fizmo-ncursesw.6
 
 install-locales::
 	mkdir -p $(DESTDIR)$(localedir)
