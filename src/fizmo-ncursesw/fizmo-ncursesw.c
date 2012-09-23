@@ -1574,12 +1574,14 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
             result = EVENT_WAS_CODE_PAGE_DOWN;
           else if (input == KEY_PPAGE)
             result = EVENT_WAS_CODE_PAGE_UP;
+          else if (input == KEY_DC)
+            result = EVENT_WAS_CODE_DELETE;
           else if (input == KEY_BACKSPACE)
             result = EVENT_WAS_CODE_BACKSPACE;
         }
         else if (input_return_code == OK)
         {
-          if ( (input == 127) || (input == 8) )
+          if (input == 127)
             result = EVENT_WAS_CODE_BACKSPACE;
           else if (input == 1)
             result = EVENT_WAS_CODE_CTRL_A;
