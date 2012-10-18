@@ -1,4 +1,4 @@
-.TH FIZMO-NCURSESW 6 "September 25, 2012" "0.7.5"
+.TH FIZMO-NCURSESW 6 "October 18, 2012" "0.7.5"
 .SH NAME
 fizmo-ncursesw
 - wide-character-ncurses implementation of the fizmo Z-Machine Interpreter.
@@ -327,7 +327,13 @@ You can use the \fCPageUp\fP and \fCPageDown\fP keys (some terminals may
 require holding down shift) anytime to review text which was scrolled above
 the current window border.
 .SS Refreshing the screen
-\fCCTRL-L\fP will redraw the current display.
+\fCCTRL-L\fP will refresh the current display.
+.SS Redrawing the screen
+\fCCTRL-R\fP will redraw the current display. Contrary to CTRL-L, which
+refreshes the screen based on the current layout, CTRL-R will reconstruct the
+latest output based on the output history. This will help to display output
+which is hidden in case a game clears the screen, writes some text into the
+top line and then turns on the score line which then overlays the topmost line.
 .SS Resizing the screen
 In general, resizing the screen works best for game versions 3 and before,
 which is unfortunate since this encompasses only a part of the old Infocom
