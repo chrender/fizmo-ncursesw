@@ -59,14 +59,14 @@ AC_ARG_ENABLE([config-files],
  [],
  [enable_config_files=yes])
 
-AC_INIT([fizmo-ncursesw], [0.7.5])
+AC_INIT([fizmo-ncursesw], [0.7.6])
 
 AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
 AC_PROG_RANLIB
 
-PKG_CHECK_MODULES([libfizmo], [libfizmo >= 0.7.5])
+PKG_CHECK_MODULES([libfizmo], [libfizmo >= 0.7.6])
 PKG_CHECK_MODULES([libcellif], [libcellif >= 0.7.5])
 PKG_CHECK_MODULES([libsndifsdl], [libsndifsdl >= 0.7.3])
 PKG_CHECK_MODULES([libdrilbo], [libdrilbo >= 0.2.3])
