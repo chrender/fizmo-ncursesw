@@ -35,11 +35,11 @@ AC_ARG_ENABLE([tracing],
  [],
  [enable_tracing=no])
 
-AC_ARG_ENABLE([x11-images],
- [AS_HELP_STRING([--disable-x11-images],
-                 [Don't display frontispiece in X11-window])],
- [],
- [enable_x11_images=yes])
+#AC_ARG_ENABLE([x11-images],
+# [AS_HELP_STRING([--disable-x11-images],
+#                 [Don't display frontispiece in X11-window])],
+# [],
+# [enable_x11_images=yes])
 
 AC_ARG_ENABLE([sdl-sound])
  [AS_HELP_STRING([--disable-sdl-sound],
@@ -72,7 +72,7 @@ PKG_CHECK_MODULES([libsndifsdl], [libsndifsdl >= 0.7.3])
 PKG_CHECK_MODULES([libdrilbo], [libdrilbo >= 0.2.3])
 m4_include(config-libs.m4)
 
-AS_IF([test "x$enable_x11_images" != "xno"], [
+AS_IF([test "x$enable_x11" != "xno"], [
   PKG_CHECK_MODULES([x11], [x11])
 ])
 
