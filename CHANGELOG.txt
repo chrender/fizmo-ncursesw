@@ -1,7 +1,7 @@
 
    Version 0.7.6
  + 0.7.6 was finished at about (?).
- - Improved configure-detection for linbcursesw for systems without
+ - Improved configure-detection for libncursesw for systems without
    pkg-config's ncursesw.pc.
  - Adapted to new "disable-x11" and "disable-sound" configuration.
 
