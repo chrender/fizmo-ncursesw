@@ -49,3 +49,7 @@ PKG_CHECK_MODULES(
   libncursesw_nonpkg_libs="-L$ncursesw_l_dir -lncursesw"
 ])
 
+AS_IF([test "x$enable_x11" != "xno"], [
+  PKG_CHECK_MODULES([x11], [x11])
+])
+
