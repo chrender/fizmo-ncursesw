@@ -59,7 +59,7 @@ AC_ARG_ENABLE([config-files],
  [],
  [enable_config_files=yes])
 
-AC_INIT([fizmo-ncursesw], [0.7.5])
+AC_INIT([fizmo-ncursesw], [0.7.6])
 
 AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
