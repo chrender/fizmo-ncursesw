@@ -1,4 +1,10 @@
 
+   Version 0.7.6
+ + 0.7.6 was finished at about (?).
+ - Improved configure-detection for linbcursesw for systems without
+   pkg-config's ncursesw.pc.
+ - Adapted to new "disable-x11" and "disable-sound" configuration.
+
    Version 0.7.5
  + 0.7.5 was finished at about Fri Nov 30 14:02:28 CET 2012.
  - Fixed missing delete input.
