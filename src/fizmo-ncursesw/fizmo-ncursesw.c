@@ -45,6 +45,7 @@
 #include <signal.h>
 #include <ncurses.h>
 //#include <ncursesw/ncurses.h>
+#include <wchar.h>
 
 #include <tools/i18n.h>
 #include <tools/tracelog.h>
