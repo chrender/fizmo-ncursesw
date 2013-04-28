@@ -316,7 +316,6 @@ static void infowin_z_ucs_output_wordwrap_destination(z_ucs *z_ucs_output,
 }
 
 
-#ifdef ENABLE_TRACING
 static z_colour curses_to_z_colour(short curses_color)
 {
   switch (curses_color)
@@ -333,7 +332,6 @@ static z_colour curses_to_z_colour(short curses_color)
 
   return -1;
 }
-#endif // ENABLE_TRACING
 
 
 static void goto_yx(int y, int x)
