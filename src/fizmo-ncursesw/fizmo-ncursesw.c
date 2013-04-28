@@ -1850,13 +1850,13 @@ static void set_cursor_visibility(bool visible)
 
 static z_colour get_default_foreground_colour()
 {
-  return Z_COLOUR_WHITE;
+  return screen_default_foreground_color;
 }
 
 
 static z_colour get_default_background_colour()
 {
-  return Z_COLOUR_BLACK;
+  return screen_default_background_color;
 }
 
 static int prompt_for_filename(char *UNUSED(filename_suggestion),
@@ -2344,11 +2344,15 @@ int main(int argc, char *argv[])
   char *cwd = NULL;
   char *absdirname = NULL;
   z_colour new_color;
+  chtype default_bkgd;
 #ifndef DISABLE_FILELIST
   char *story_to_load_filename, *assumed_filename;
   struct z_story_list *story_list;
   size_t absdirname_len = 0;
-  int i;
+  int i, default_pair;
+  SCREEN *s;
+  short pair_foreground, pair_background;
+  z_colour default_fore, default_back;
 #endif // DISABLE_FILELIST
 
 #ifdef ENABLE_TRACING
@@ -2357,6 +2361,38 @@ int main(int argc, char *argv[])
 
   setlocale(LC_ALL, "C");
   setlocale(LC_CTYPE, "");
+
+  // newterm instead of initscr to init ncurses without clearing screen
+  // so we can exit gracefully in case of errors.
+  if ((s = newterm(NULL, stdin, stdout)) == NULL)
+    return -1;
+  if (has_colors() == true) {
+    start_color();
+    default_bkgd = getbkgd(stdscr);
+    default_pair = default_bkgd & A_COLOR;
+    TRACE_LOG("Default pair: %d\n", default_pair);
+    if (pair_content(default_pair, &pair_foreground, &pair_background) == ERR) {
+      TRACE_LOG("pair_content returned ERR.\n");
+      screen_default_foreground_color = Z_COLOUR_WHITE;
+      screen_default_background_color = Z_COLOUR_BLACK;
+    }
+    else {
+      default_fore = curses_to_z_colour(pair_foreground);
+      default_back = curses_to_z_colour(pair_background);
+      if ((default_fore < 0) || (default_back < 0)) {
+        TRACE_LOG("Illegal default color values, reverting to white/black.\n");
+        screen_default_foreground_color = Z_COLOUR_WHITE;
+        screen_default_background_color = Z_COLOUR_BLACK;
+      }
+      else {
+        TRACE_LOG("Default colors from ncurses: %d, %d.\n",
+            default_fore, default_back);
+        screen_default_foreground_color = default_fore;
+        screen_default_background_color = default_back;
+      }
+    }
+  }
+  endwin();
 
   fizmo_register_screen_cell_interface(&ncursesw_interface);
 
@@ -2482,13 +2518,18 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
       }
 
-      if ((new_color = colorname_to_infocomcode(argv[argi])) == -1)
-      {
+      if (set_configuration_value("background-color", (argv[argi])) < 0) {
         print_startup_syntax();
         exit(EXIT_FAILURE);
       }
 
+      if ((new_color = colorname_to_infocomcode(argv[argi])) == -1) {
+        // Shouldn't happen since set-config said the value is okay.
+        exit(EXIT_FAILURE);
+      }
+
       screen_default_background_color = new_color;
+
       argi++;
     }
     else if (
@@ -2501,13 +2542,18 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
       }
 
-      if ((new_color = colorname_to_infocomcode(argv[argi])) == -1)
-      {
+      if (set_configuration_value("foreground-color", (argv[argi])) < 0) {
         print_startup_syntax();
         exit(EXIT_FAILURE);
       }
 
+      if ((new_color = colorname_to_infocomcode(argv[argi])) == -1) {
+        // Shouldn't happen since set-config said the value is okay.
+        exit(EXIT_FAILURE);
+      }
+
       screen_default_foreground_color = new_color;
+
       argi++;
     }
     else if (
@@ -2924,9 +2970,7 @@ int main(int argc, char *argv[])
   fizmo_start(
       story_stream,
       blorb_stream,
-      savegame_to_restore,
-      screen_default_foreground_color,
-      screen_default_background_color);
+      savegame_to_restore);
 
   sigaction(SIGWINCH, NULL, NULL);
 
