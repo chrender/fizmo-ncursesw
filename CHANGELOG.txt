@@ -1,7 +1,10 @@
 
    Version 0.7.7
+ + 0.7.7 was finished at about Wed Jun 5 18:49:00 CEST 2013.
  - Adapted to new "fizmo_register_screen_interface" and "fizmo_start"
    functions.
+ - Fix build error for some systems due to missing wchar.h include -- thanks 
+   to Nikos Chantziaras.
  - Added default terminal color evluation.
  - Adapted to new "install-data-local" build target.
 
