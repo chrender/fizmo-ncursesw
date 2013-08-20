@@ -60,9 +60,9 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
 AC_PROG_RANLIB
 
-PKG_CHECK_MODULES([libfizmo], [libfizmo >= 0.7.5])
-PKG_CHECK_MODULES([libcellif], [libcellif >= 0.7.5])
-PKG_CHECK_MODULES([libdrilbo], [libdrilbo >= 0.2.3])
+PKG_CHECK_MODULES([libfizmo], [libfizmo >= 0.7.8])
+PKG_CHECK_MODULES([libcellif], [libcellif >= 0.7.8])
+PKG_CHECK_MODULES([libdrilbo], [libdrilbo >= 0.2.6])
 AS_IF([test "x$enable_sound" == "xyes"], [
   PKG_CHECK_MODULES([libsndifsdl], [libsndifsdl >= 0.7.3])
 ])
