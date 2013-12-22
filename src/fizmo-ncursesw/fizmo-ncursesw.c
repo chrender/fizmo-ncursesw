@@ -1723,11 +1723,11 @@ void copy_area(int dsty, int dstx, int srcy, int srcx, int height, int width)
   int y, x;
   cchar_t wcval;
 
-  TRACE_LOG("copyarea:%d/%d/%d/%d/%d/%d\n", 
-      srcy,
-      srcx,
+  TRACE_LOG("copyarea, dst:%d/%d, src:%d/%d, size:%d*%d\n", 
       dsty,
       dstx,
+      srcy,
+      srcx,
       height,
       width);
 
