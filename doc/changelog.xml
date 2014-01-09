@@ -2,6 +2,7 @@
 <changelog>
   <change version="0.7.8">
     <logentry>Adapted to automake v1.14 “subdir-objects” option.</logentry>
+    <logentry>Added missing license/copyright information.</logentry>
   </change>
 
   <change version="0.7.7">

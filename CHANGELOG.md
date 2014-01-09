@@ -4,6 +4,7 @@
    **Version 0.7.8**
 
  - Adapted to automake v1.14 “subdir-objects” option.
+ - Added missing license/copyright information.
 
 ---
 
