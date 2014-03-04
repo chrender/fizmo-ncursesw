@@ -1,7 +1,7 @@
 
 
 
-   **Version 0.7.8**
+   **Version 0.7.8 — March 3, 2014**
 
  - Adapted to automake v1.14 “subdir-objects” option.
  - Added missing license/copyright information.
@@ -9,7 +9,7 @@
 ---
 
 
-   **Version 0.7.7 —  5, 2013**
+   **Version 0.7.7 — June 5, 2013**
 
  - Adapted to new “fizmo_register_screen_interface” and “fizmo_start” functions.
  - Fix build error for some systems due to missing wchar.h include – thanks to Nikos Chantziaras.
@@ -19,7 +19,7 @@
 ---
 
 
-   **Version 0.7.6 —  27, 2012**
+   **Version 0.7.6 — December 27, 2012**
 
  - Improved configure-detection for libncursesw for systems without pkg-config's ncursesw.pc.
  - Adapted to new “disable-x11” and “disable-sound” configuration.
@@ -27,7 +27,7 @@
 ---
 
 
-   **Version 0.7.5 —  30, 2012**
+   **Version 0.7.5 — November 30, 2012**
 
  - Fixed missing delete input.
  - Fixed manpage typos, thanks to Johan Ljunglid.
@@ -36,14 +36,14 @@
 ---
 
 
-   **Version 0.7.4 —  17, 2012**
+   **Version 0.7.4 — September 17, 2012**
 
  - Adapted to new autoconf/automake build system.
 
 ---
 
 
-   **Version 0.7.3 —  1, 2012**
+   **Version 0.7.3 — August 1, 2012**
 
  - Merged Andrew Plotkin's iOS-fizmo changes: Adapted to “prompt_for_filename” function in screen-cell-interface.
  - Minor memory leak cleanups.
@@ -51,14 +51,14 @@
 ---
 
 
-   **Version 0.7.2 —  9, 2012**
+   **Version 0.7.2 — March 9, 2012**
 
  - Fixed missing $(DESTDIR) variable – should already have been present since version 0.7.1.
 
 ---
 
 
-   **Version 0.7.1 —  6, 2011**
+   **Version 0.7.1 — November 6, 2011**
 
  - Fixed missing “override” statments for CFLAGS in Makefiles.
  - Fixed $(DESTDIR) evaluation in config.[default|macports].mk.
@@ -69,7 +69,7 @@
 ---
 
 
-   **Version 0.7.0 —  18, 2011**
+   **Version 0.7.0 — September 18, 2011**
 
  - The “fizmo-ncursesw” interface has been re-implemented for version 0.7. It now makes use of libcellif for output. It uses libfizmo's new word hyphenation and implements better X11-output through libdrilbo.
  - X11 frontispiece display is now by default in a separate window, which, contrary to the older implementation that simply invoked a XCopyArea directly into the terminal's X window, should work reliably. For terminals which by chance support it, the old behaviour is still available by using the “display-x11-inline-image” config option. The inline display has been changed to no longer write directly into the terminal window, but instead to use a subwindow instead.
@@ -78,14 +78,14 @@
 ---
 
 
-   **Version 0.6.9 —  24, 2011**
+   **Version 0.6.9 — April 24, 2011**
 
  - Added NCURSESW_INCLUDE_FROM_W_DIRNAME to configs to allow usage of Apple's ncurses implementation, added GDKPIXBUF_INC_DIR configuration variable.
 
 ---
 
 
-   **Version 0.6.4 —  24, 2009**
+   **Version 0.6.4 — May 24, 2009**
 
  - Bugfix release: Definitely recommend for read_char fix.
  - Fixed interface to supply default colors in case ncurses' “pair_content” returned invalid colors (thanks to Samuel Verschelde).
@@ -94,7 +94,7 @@
 ---
 
 
-   **Version 0.6.0 —  25, 2009**
+   **Version 0.6.0 — March 25, 2009**
 
  - This marks the point for the first public beta release.
  - Implemented conversion of font 3 (charachter font) to unicode. This appears to make Beyond Zork's map appear at least readable.
@@ -114,7 +114,7 @@
 ---
 
 
-   **Version 0.5.3 —  11, 2009**
+   **Version 0.5.3 — March 11, 2009**
 
  - Re-wrote Makefile system. Releveant module defaults are now kept in separate .mk-files.
  - Added support for extra-blorb files (these are specified on the command line directly after the story file name).
@@ -124,7 +124,7 @@
 ---
 
 
-   **Version 0.5.2 —  17, 2009**
+   **Version 0.5.2 — January 17, 2009**
 
  - Implemented story selection menu in ncursesw interface.
  - Implemented parsing of rc file.
@@ -142,9 +142,8 @@
 ---
 
 
-   **Version 0.5.1**
+   **Version 0.5.1 — November 4, 2008**
 
- - 0.5.1 was finished at about Di 4 Nov 2008 21:48:29 CET.
  - Fixed scrollback and i18n-exit-translation.
  - Fixed libfizmo to also use setitimer/sigaction (makes fizmo work better on linux).
  - Implemented foreground/background color command line parameters for ncursesw interface.
@@ -154,9 +153,8 @@
 ---
 
 
-   **Version 0.5.0**
+   **Version 0.5.0 — October 30, 2008**
 
- - 0.5.0 was finished at about Do 30 Okt 2008 11:42:27 CET.
  - This version is now definitely usable to play all non-v6 games. Did extensive testing using Borderzone, “LostPig.z8”, “Zokoban.z5”, “crashme.z5”, “etude.z5”, “paint.z5”, “random.z5”, “reverzi.z5” and “unicode.z5”. Only two minor known bugs remain: Scrollback sometimes miscalculates the current row after a lot of scrolling back and forth (which is always “fixable” to pressing any-key which correctly rebuilds the current output page, and a display anomaly on the frontpage of “vampire.z8” which I intended to keep after a lot of code-inspection (since fizmo appears to be implementing the screen modell correctly and fixing this display problem breaks a lot of other games). This version has been tested on Linux, Darwin (Mac Os X) and a little bit on XP/Cygwin (using a self-built ncursesw).
  - Fixed timed-input detection for “read” opcode. This fixes the crash in ZTUU when the lantern goes out.
  - Ran fizmo through (sp)lint, fixed memory leaks, minor bugs, many typecasts, some double and inconsistent definitions, cleanup up code.
@@ -171,7 +169,7 @@
 ---
 
 
-   **Version 0.4.1 —  14, 2007**
+   **Version 0.4.1 — November 14, 2007**
 
  - Separated code in core, interface, c and cpp interfaces.
  - Improved upper window handling (trinity sundial) and blockbuffer (zork1.z5).
