@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <changelog>
   <change version="0.7.8">
-    <datetime day-of-week="Mon" month="3" day="3" hour="21"
-      minute="50" second="0" timezone="CET" year="2014"/>
+    <datetime day-of-week="Wed" month="3" day="19" hour="20"
+      minute="25" second="58" timezone="CET" year="2014"/>
     <logentry>Adapted to automake v1.14 “subdir-objects” option.</logentry>
     <logentry>Added missing license/copyright information.</logentry>
   </change>
