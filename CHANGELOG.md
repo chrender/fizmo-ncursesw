@@ -1,6 +1,13 @@
 
 
 
+   **Version 0.7.9**
+
+ - Minor autoconf-related changes for fizmo-dist-0.7.10-compatibility.
+
+---
+
+
    **Version 0.7.8 — March 19, 2014**
 
  - Adapted to automake v1.14 “subdir-objects” option.

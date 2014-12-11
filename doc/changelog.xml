@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <changelog>
+  <change version="0.7.9">
+    <logentry>Minor autoconf-related changes for fizmo-dist-0.7.10-compatibility.</logentry>
+  </change>
+
   <change version="0.7.8">
     <datetime day-of-week="Wed" month="3" day="19" hour="20"
       minute="25" second="58" timezone="CET" year="2014"/>

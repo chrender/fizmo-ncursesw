@@ -53,7 +53,11 @@ AC_ARG_ENABLE([config-files],
  [],
  [enable_config_files=yes])
 
-AC_INIT([fizmo-ncursesw], [0.7.8])
+AC_INIT(
+ [fizmo-ncursesw],
+ [0.7.9],
+ fizmo@spellbreaker.org,
+ fizmo-ncursesw)
 
 AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
