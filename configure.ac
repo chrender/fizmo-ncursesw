@@ -35,12 +35,6 @@ AC_ARG_ENABLE([tracing],
  [],
  [enable_tracing=no])
 
-#AC_ARG_ENABLE([x11-images],
-# [AS_HELP_STRING([--disable-x11-images],
-#                 [Don't display frontispiece in X11-window])],
-# [],
-# [enable_x11_images=yes])
-
 AC_ARG_ENABLE([filelist],
  [AS_HELP_STRING([--disable-filelist],
                   [disable story-list-keeping functionality])],
@@ -52,6 +46,13 @@ AC_ARG_ENABLE([config-files],
 	 [disable parsing of configuration files])],
  [],
  [enable_config_files=yes])
+
+AC_ARG_ENABLE([sdl],
+ [AS_HELP_STRING([--disable-sdl],
+         [SDL will not be required for building, this will however disable
+          sound support])],
+ [],
+ [enable_sdl=yes])
 
 AC_INIT(
  [fizmo-ncursesw],
@@ -67,8 +68,8 @@ AC_PROG_RANLIB
 PKG_CHECK_MODULES([libfizmo], [libfizmo >= 0.7.8])
 PKG_CHECK_MODULES([libcellif], [libcellif >= 0.7.8])
 PKG_CHECK_MODULES([libdrilbo], [libdrilbo >= 0.2.6])
-AS_IF([test "x$enable_sound" == "xyes"], [
-  PKG_CHECK_MODULES([libsndifsdl], [libsndifsdl >= 0.7.3])
+AS_IF([test "$enable_sdl" != "no"], [
+  PKG_CHECK_MODULES([libsndifsdl2], [libsndifsdl2 >= 0.8.0])
 ])
 m4_include(config-libs.m4)
 
@@ -77,6 +78,14 @@ AM_CONDITIONAL([ENABLE_TRACING],
 
 m4_include(config-conds.m4)
 m4_include(config-subst.m4)
+
+#build_prefix_cflags=$build_prefix/include/fizmo
+#build_prefix_libs=$build_prefix/lib/fizmo
+
+# Due to autoconf limitations (no variables in include files?) the file
+# below has to be manually copied over from the sound interface's
+# "config-subst.m4".
+m4_include(config-subst-libsndifsdl2.m4)
 
 AC_CONFIG_FILES([Makefile src/fizmo-ncursesw/Makefile])
 AC_OUTPUT
