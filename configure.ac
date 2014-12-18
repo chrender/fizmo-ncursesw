@@ -79,9 +79,6 @@ AM_CONDITIONAL([ENABLE_TRACING],
 m4_include(config-conds.m4)
 m4_include(config-subst.m4)
 
-#build_prefix_cflags=$build_prefix/include/fizmo
-#build_prefix_libs=$build_prefix/lib/fizmo
-
 # Due to autoconf limitations (no variables in include files?) the file
 # below has to be manually copied over from the sound interface's
 # "config-subst.m4".
