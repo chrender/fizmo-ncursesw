@@ -668,14 +668,6 @@ static void print_startup_syntax()
   streams_latin1_output("\n");
 #endif //ENABLE_X11_IMAGES
 
-  /*
-  streams_latin1_output( " -s8, --force-8bit-sound: ");
-  i18n_translate(
-      fizmo_ncursesw_module_name,
-      i18n_ncursesw_FORCE_8BIT_SOUND);
-  streams_latin1_output("\n");
-  */
-
   streams_latin1_output( " -ds, --disable-sound: ");
   i18n_translate(
       fizmo_ncursesw_module_name,
