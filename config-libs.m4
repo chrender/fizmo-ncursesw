@@ -10,7 +10,7 @@ PKG_CHECK_MODULES(
     AC_MSG_CHECKING(for $dir/ncurses.h)
     if [ test -e $dir/ncurses.h ]; then
       AC_MSG_RESULT(yes)
-      ncursesw_h_dir=$dir
+      ncurses_h_dir=$dir
       break
     else
       AC_MSG_RESULT(no)
@@ -34,7 +34,7 @@ PKG_CHECK_MODULES(
     AC_TRY_LINK(
       [ #define _XOPEN_SOURCE_EXTENDED 1
         #include <stdio.h>
-        #include "$ncursesw_h_dir/ncurses.h"],
+        #include "$ncurses_h_dir/ncurses.h"],
       [ wchar_t buf[2]; addwstr(buf); ],
       [AC_MSG_RESULT(yes)
        ncursesw_l_dir=$dir
@@ -53,7 +53,7 @@ PKG_CHECK_MODULES(
       AC_TRY_LINK(
         [ #define _XOPEN_SOURCE_EXTENDED 1
           #include <stdio.h>
-          #include "$ncursesw_h_dir/ncurses.h"],
+          #include "$ncurses_h_dir/ncurses.h"],
         [ wchar_t buf[2]; addwstr(buf); ],
         [AC_MSG_RESULT(yes)
          ncursesw_l_dir=$dir
