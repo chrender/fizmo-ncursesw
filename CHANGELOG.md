@@ -3,6 +3,8 @@
 
    **Version 0.7.9**
 
+ - No more strict dependency on libncursesw since libncurses works equally well.
+ - Added forgotten configuration options “with-ncurses-includedir”, “with-ncursesw-libdir” and “with-ncurses-libdir”.
  - Minor autoconf-related changes for fizmo-dist-0.7.10-compatibility.
 
 ---
