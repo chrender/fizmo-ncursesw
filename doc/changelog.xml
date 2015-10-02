@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <changelog>
   <change version="0.7.9">
+    <datetime day-of-week="Fri" month="10" day="2" hour="23"
+      minute="22" second="12" timezone="CEST" year="2015"/>
     <logentry>No more strict dependency on libncursesw since libncurses works equally well.</logentry>
     <logentry>Added forgotten configuration options “with-ncurses-includedir”, “with-ncursesw-libdir” and “with-ncurses-libdir”.</logentry>
     <logentry>Minor autoconf-related changes for fizmo-dist-0.7.10-compatibility.</logentry>
