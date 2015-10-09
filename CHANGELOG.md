@@ -1,7 +1,7 @@
 
 
 
-   **Version 0.7.9 — October 2, 2015**
+   **Version 0.7.9 — October 9, 2015**
 
  - No more strict dependency on libncursesw since libncurses works equally well.
  - Added forgotten configuration options “with-ncurses-includedir”, “with-ncursesw-libdir” and “with-ncurses-libdir”.
