@@ -3,7 +3,7 @@
  *
  * This file is part of fizmo.
  *
- * Copyright (c) 2009-2015 Christoph Ender.
+ * Copyright (c) 2009-2016 Christoph Ender.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,7 +69,7 @@
 
 #include "../locales/fizmo_ncursesw_locales.h"
 
-#define FIZMO_NCURSESW_VERSION "0.7.9"
+#define FIZMO_NCURSESW_VERSION "0.7.10"
 
 #ifdef ENABLE_X11_IMAGES
 #include <drilbo/drilbo.h>

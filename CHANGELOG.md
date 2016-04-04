@@ -1,6 +1,13 @@
 
 
 
+   **Version 0.7.10**
+
+ - Updated manpage for version 0.8.0.
+
+---
+
+
    **Version 0.7.9 — October 9, 2015**
 
  - No more strict dependency on libncursesw since libncurses works equally well.
