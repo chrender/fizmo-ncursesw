@@ -1,9 +1,9 @@
 
 
 
-   **Version 0.7.10**
+   **Version 0.7.10 — July 28, 2016**
 
- - Updated manpage for version 0.8.0.
+ - Updated manpage and coyright data for version 0.8.0 release.
 
 ---
 
