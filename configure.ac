@@ -56,7 +56,7 @@ AC_ARG_ENABLE([sdl],
 
 AC_INIT(
  [fizmo-ncursesw],
- [0.7.10],
+ [0.7.11],
  fizmo@spellbreaker.org,
  fizmo-ncursesw)
 

@@ -1,6 +1,13 @@
 
 
 
+   **Version 0.7.11**
+
+ - Fixed typo in manpage.
+
+---
+
+
    **Version 0.7.10 — July 28, 2016**
 
  - Updated manpage and coyright data for version 0.8.0 release.

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <changelog>
+  <change version="0.7.11">
+    <logentry>Fixed typo in manpage.</logentry>
+  </change>
+
   <change version="0.7.10">
     <datetime day-of-week="Thu" month="7" day="28" hour="20"
       minute="17" second="58" timezone="CEST" year="2016"/>
