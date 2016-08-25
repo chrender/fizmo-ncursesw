@@ -43,7 +43,7 @@
 #define i18n_ncursesw_SET_LOCALE_NAME_FOR_INTERPRETER_MESSAGES 7
 #define i18n_ncursesw_START_WITH_RANDOM_GENERATOR_IN_PREDICTABLE_MODE 8
 #define i18n_ncursesw_START_GAME_WITH_TRANSCRIPT_ENABLED 9
-#define i18n_ncursesw_LIBFIZMO_VERSION_P0S 10
+#define i18n_ncursesw_LIBFIZMO_VERSION_P0S 10 // no longer used.
 #define i18n_ncursesw_LOCALES_AVAILIABLE 11
 #define i18n_ncursesw_MORE_PROMPT 12
 #define i18n_ncursesw_SCORE 13
