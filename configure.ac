@@ -65,11 +65,11 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
 AC_PROG_RANLIB
 
-PKG_CHECK_MODULES([libfizmo], [libfizmo >= 0.7.8])
-PKG_CHECK_MODULES([libmonospaceif], [libmonospaceif >= 0.7.8])
-PKG_CHECK_MODULES([libdrilbo], [libdrilbo >= 0.2.6])
+PKG_CHECK_MODULES([libfizmo], [libfizmo >= 0.7.12])
+PKG_CHECK_MODULES([libmonospaceif], [libmonospaceif >= 0.7.12])
+PKG_CHECK_MODULES([libdrilbo], [libdrilbo >= 0.2.8])
 AS_IF([test "$enable_sdl" != "no"], [
-  PKG_CHECK_MODULES([libsndifsdl2], [libsndifsdl2 >= 0.8.0])
+  PKG_CHECK_MODULES([libsndifsdl2], [libsndifsdl2 >= 0.8.1])
 ])
 m4_include(config-libs.m4)
 
