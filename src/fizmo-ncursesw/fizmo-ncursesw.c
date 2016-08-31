@@ -60,8 +60,8 @@
 #include <interpreter/blorb.h>
 #include <interpreter/savegame.h>
 #include <interpreter/output.h>
-#include <screen_interface/screen_cell_interface.h>
-#include <cell_interface/cell_interface.h>
+#include <screen_interface/screen_monospace_interface.h>
+#include <monospace_interface/monospace_interface.h>
 
 #ifdef SOUND_INTERFACE_INCLUDE_FILE
 #include SOUND_INTERFACE_INCLUDE_FILE
@@ -456,8 +456,8 @@ static void print_startup_syntax()
   streams_latin1_output("\n");
   i18n_translate(
       fizmo_ncursesw_module_name,
-      i18n_ncursesw_LIBCELLINTERFACE_VERSION_P0S,
-      get_screen_cell_interface_version());
+      i18n_ncursesw_LIBMONOSPACEINTERFACE_VERSION_P0S,
+      get_screen_monospace_interface_version());
   streams_latin1_output("\n");
   if (active_sound_interface != NULL)
   {
@@ -1647,7 +1647,7 @@ static int get_next_event(z_ucs *z_ucs_input, int timeout_millis)
           //getmaxyx(stdscr, screen_height, screen_width);
           refresh_screen_size();
           //TRACE_LOG("New dimensions: %dx%d.\n", screen_width, screen_height);
-          //new_cell_screen_size(screen_height, screen_width);
+          //new_monospace_screen_size(screen_height, screen_width);
           input_should_terminate = true;
         }
         else
@@ -1852,7 +1852,7 @@ static int prompt_for_filename(char *UNUSED(filename_suggestion),
 }
 
 
-static struct z_screen_cell_interface ncursesw_interface =
+static struct z_screen_monospace_interface ncursesw_interface =
 {
   &goto_yx,
   &z_ucs_output,
@@ -2379,13 +2379,13 @@ int main(int argc, char *argv[])
   }
   endwin();
 
-  fizmo_register_screen_cell_interface(&ncursesw_interface);
+  fizmo_register_screen_monospace_interface(&ncursesw_interface);
 
 #ifdef SOUND_INTERFACE_STRUCT_NAME
   fizmo_register_sound_interface(&SOUND_INTERFACE_STRUCT_NAME);
 #endif // SOUND_INTERFACE_STRUCT_NAME
 
-  // Parsing must occur after "fizmo_register_screen_cell_interface" so
+  // Parsing must occur after "fizmo_register_screen_monospace_interface" so
   // that fizmo knows where to forward "parse_config_parameter" parameters
   // to.
 #ifndef DISABLE_CONFIGFILES
@@ -2673,13 +2673,13 @@ int main(int argc, char *argv[])
           ||
           (strcmp(argv[argi - 1], "--left-margin") == 0)
          )
-        set_custom_left_cell_margin(int_value);
+        set_custom_left_monospace_margin(int_value);
       else if (
           (strcmp(argv[argi - 1], "-rm") == 0)
           ||
           (strcmp(argv[argi - 1], "--right-margin") == 0)
           )
-        set_custom_right_cell_margin(int_value);
+        set_custom_right_monospace_margin(int_value);
       else if (
           (strcmp(argv[argi - 1], "-mu") == 0)
           ||

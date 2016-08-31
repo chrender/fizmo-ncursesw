@@ -31,9 +31,9 @@
 
 AUTOMAKE_OPTIONS = subdir-objects
 
-AM_CFLAGS = $(libfizmo_CFLAGS) $(libcellif_CFLAGS) $(ncursesw_CFLAGS) $(LIBNCURSESW_NONPKG_CFLAGS)
+AM_CFLAGS = $(libfizmo_CFLAGS) $(libmonospaceif_CFLAGS) $(ncursesw_CFLAGS) $(LIBNCURSESW_NONPKG_CFLAGS)
 AM_CPPFLAGS =
-LDADD = $(libfizmo_LIBS) $(libcellif_LIBS) $(ncursesw_LIBS) $(LIBNCURSESW_NONPKG_LIBS)
+LDADD = $(libfizmo_LIBS) $(libmonospaceif_LIBS) $(ncursesw_LIBS) $(LIBNCURSESW_NONPKG_LIBS)
 
 bin_PROGRAMS = fizmo-ncursesw
 fizmo_ncursesw_SOURCES = ../locales/fizmo_ncursesw_locales.c fizmo-ncursesw.c

@@ -66,7 +66,7 @@ AC_PROG_CC
 AC_PROG_RANLIB
 
 PKG_CHECK_MODULES([libfizmo], [libfizmo >= 0.7.8])
-PKG_CHECK_MODULES([libcellif], [libcellif >= 0.7.8])
+PKG_CHECK_MODULES([libmonospaceif], [libmonospaceif >= 0.7.8])
 PKG_CHECK_MODULES([libdrilbo], [libdrilbo >= 0.2.6])
 AS_IF([test "$enable_sdl" != "no"], [
   PKG_CHECK_MODULES([libsndifsdl2], [libsndifsdl2 >= 0.8.0])

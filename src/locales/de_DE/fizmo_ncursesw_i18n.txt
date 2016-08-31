@@ -44,7 +44,7 @@ Fehler \{0d} trat vor Read auf: „\{1s}“.
 Unbekannter Fehlerfall.
 Funktionsaufruf von malloc(\{0d}) lieferte NULL, wahrscheinlich verursacht durch Speichermangel.
 fizmo-ncursesw version \{0s}.
-libcellinterface version \{0s}.
+libmonospaceinterface version \{0s}.
 Lokalisierungsdaten-Suchpfad
 Dateiname, von dem Kommandos gelesen werden.
 X11-Inline-Grafik aktivieren.

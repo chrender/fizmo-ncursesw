@@ -1,9 +1,11 @@
 
 
 
-   **Version 0.7.11**
+   **Version 0.7.11 — August 31, 2016**
 
  - Fixed typo in manpage.
+ - Used tiny-xml-doc-tools for documentation.
+ - Adapted to renaming “libcellif” to “libmonospaceif”.
 
 ---
 
