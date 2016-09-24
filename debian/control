@@ -1,0 +1,29 @@
+Source: fizmo-ncursesw
+Section: games
+Priority: extra
+Maintainer: Christoph Ender <christoph.ender@spellbreaker.org>
+Build-Depends: debhelper (>= 9.0.0),
+ dpkg-dev (>= 1.16.1~),
+ dh-autoreconf,
+ automake,
+ autoconf,
+ pkg-config,
+ libfizmo-dev,
+ libmonospaceif-dev,
+ libsndifsdl2-dev,
+ libdrilbo-dev
+Standards-Version: 3.9.8
+Homepage: https://fizmo.spellbreaker.org/
+
+Package: fizmo-ncursesw
+Architecture: any
+Depends: libfizmo-common,
+ libmonospaceif-common,
+ libdrilbo-common,
+ ${misc:Depends},
+ ${shlibs:Depends}
+Description: Ncurses-based Z-machine interpreter for Infocom/Inform games
+ This is a ncurses-(text-)based Z-Machine interpreter. It is used to play
+ old Infocom text adventures (except version 6) and modern interactive fiction
+ as created by the Inform compiler. For more information about interactive
+ fiction -- and to download many storyfiles -- see http://www.ifarchive.org.

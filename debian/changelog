@@ -1,0 +1,141 @@
+fizmo-ncursesw (0.7.10-3) unstable; urgency=low
+
+  * Initial stand-alone packaging for fizmo-ncursesw.
+
+ -- Christoph Ender <christoph.ender@spellbreaker.org>  Sat, 24 Sep 2016 18:36:30 +0200
+
+fizmo (0.7.10-2) unstable; urgency=low
+
+  * Correctly implemented alternatives for zcode-interpreter (Closes: #812412).
+
+ -- Christoph Ender <christoph.ender@spellbreaker.org>  Wed, 23 Mar 2016 23:00:00 +0100
+
+fizmo (0.7.10-1) unstable; urgency=low
+
+  * New upstream release (Closes: #795800).
+  * Updated to machine-readable copyright file.
+  * Adapted homepage URL to use https instead of http.
+  * Raised debhelper-compatibility to version 9.
+  * Changed standards version from 3.9.5 to 3.9.6.
+  * Updated Copyright year.
+  * Adapted to new requirements for libsdl2-dev due to sound interface
+    update.
+
+ -- Christoph Ender <christoph.ender@spellbreaker.org>  Thu, 15 Oct 2015 13:50:00 +0200
+
+fizmo (0.7.9-1) unstable; urgency=low
+
+  * New upstream release (Closes: #748645).
+
+ -- Christoph Ender <christoph.ender@spellbreaker.org>  Sun, 25 May 2014 10:55:00 +0200
+
+fizmo (0.7.8-2) unstable; urgency=low
+  * Fixed binary fails to build from source (Closes: #743926).
+
+ -- Christoph Ender <christoph.ender@spellbreaker.org>  Wed, 9 Apr 2014 20:50:00 +0200
+
+fizmo (0.7.8-1) unstable; urgency=low
+
+  * New upstream release.
+  * Implemented virtual "fizmo" package.
+  * Patch "Makefile-Patches.diff" was removed and merged.
+  * Updated Copyright year.
+
+ -- Christoph Ender <christoph.ender@spellbreaker.org>  Thu, 27 Mar 2014 22:30:00 +0100
+
+fizmo (0.7.7-2) unstable; urgency=low
+
+  * Removed transitional "fizmo" dummy package.
+  * Moved building of fizmo-common from binary-arch to binary-indep.
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Sat, 15 Feb 2014 09:00:00 +0100
+
+fizmo (0.7.7-1) unstable; urgency=low
+
+  * New upstream release.
+  * Upstream target moved to unstable again due to wheezy release.
+  * Added Makefile.am patches to resolve non-functional "clean" target and
+    missing "subdir-objects" automake-options.
+  * Update to new version resolves "ar: types.o: No such file or directory"
+    error during build (Closes: #732269).
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Fri, 3 Jan 2014 16:00:00 +0100
+
+fizmo (0.7.6-1) experimental; urgency=low
+
+  * New upstream release.
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Thu, 27 Dec 2012 23:45:00 +0100
+
+fizmo (0.7.5-1) experimental; urgency=low
+
+  * New upstream release.
+  * Upstream release target is now experimental due to deep freeze.
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Mon, 13 Dec 2012 13:30:00 +0100
+
+fizmo (0.7.4-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added hardening=+all to debian build process.
+  * Adapted debian build process to new autoconf-based build system.
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Fri, 21 Sep 2012 22:15:00 +0200
+
+fizmo (0.7.2-2) unstable; urgency=low
+
+  * Removed superfluous dependency from fizmo-common to fizmo fixing circular
+    package dependency.
+  * Moved transitional fizmo package from "games" into "oldlibs" section.
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Wed, 11 Apr 2012 18:45:00 +0200
+
+fizmo (0.7.2-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Tue, 03 Apr 2012 22:15:06 +0200
+
+fizmo (0.6.10-1) unstable; urgency=low
+
+  * New upstream release.
+  * Build-Depends now require minimum version 8 for debhelper.
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Sun, 03 Jul 2011 14:31:29 +0200
+
+fizmo (0.6.9-1) unstable; urgency=low
+
+  * New upstream release (Closes: #617714).
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Sun, 1 May 2011 14:52:36 +0200
+
+fizmo (0.6.8-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Tue, 12 Jan 2010 10:26:48 +0100
+
+fizmo (0.6.7-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Tue, 15 Dec 2009 08:52:59 +0100
+
+fizmo (0.6.5-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Wed, 14 Oct 2009 09:15:12 +0200
+
+fizmo (0.6.4-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Thu, 28 May 2009 06:55:00 +0200
+
+fizmo (0.6.3-1) unstable; urgency=low
+
+  * Initial release (Closes: #525490)
+
+ -- Christoph Ender <Christoph.Ender@spellbreaker.org>  Sun, 26 Apr 2009 07:37:58 +0200
+
