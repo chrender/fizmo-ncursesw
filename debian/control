@@ -16,12 +16,16 @@ Standards-Version: 3.9.8
 Homepage: https://fizmo.spellbreaker.org/
 
 Package: fizmo-ncursesw
+Replaces: fizmo (<< 0.7.2-1)
+Breaks: fizmo (<< 0.7.2-1)
 Architecture: any
 Depends: libfizmo-common,
  libmonospaceif-common,
  libdrilbo-common,
  ${misc:Depends},
  ${shlibs:Depends}
+Provides: fizmo,
+ zcode-interpreter
 Description: Ncurses-based Z-machine interpreter for Infocom/Inform games
  This is a ncurses-(text-)based Z-Machine interpreter. It is used to play
  old Infocom text adventures (except version 6) and modern interactive fiction

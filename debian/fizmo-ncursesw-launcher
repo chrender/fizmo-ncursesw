@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ -t 0 ]; then
+    fizmo-ncursesw "$@"
+else
+    x-terminal-emulator -e fizmo-ncursesw "$@"
+fi
