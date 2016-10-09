@@ -1,6 +1,14 @@
 
 
 
+   **Version 0.7.12 — October 9, 2016**
+
+ - Adapted to new split-library bulids.
+ - Updated man page.
+
+---
+
+
    **Version 0.7.11 — August 31, 2016**
 
  - Fixed typo in manpage.

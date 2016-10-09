@@ -56,7 +56,7 @@ AC_ARG_ENABLE([sdl],
 
 AC_INIT(
  [fizmo-ncursesw],
- [0.7.11],
+ [0.7.12],
  fizmo@spellbreaker.org,
  fizmo-ncursesw)
 
@@ -65,11 +65,11 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
 AC_PROG_RANLIB
 
-PKG_CHECK_MODULES([libfizmo], [libfizmo >= 0.7.12])
-PKG_CHECK_MODULES([libmonospaceif], [libmonospaceif >= 0.7.12])
-PKG_CHECK_MODULES([libdrilbo], [libdrilbo >= 0.2.8])
+PKG_CHECK_MODULES([libfizmo], [libfizmo >= 0.7.13])
+PKG_CHECK_MODULES([libmonospaceif], [libmonospaceif >= 0.7.13])
+PKG_CHECK_MODULES([libdrilbo], [libdrilbo >= 0.2.9])
 AS_IF([test "$enable_sdl" != "no"], [
-  PKG_CHECK_MODULES([libsndifsdl2], [libsndifsdl2 >= 0.8.1])
+  PKG_CHECK_MODULES([libsndifsdl2], [libsndifsdl2 >= 0.8.2])
 ])
 m4_include(config-libs.m4)
 
