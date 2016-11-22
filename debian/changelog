@@ -1,3 +1,9 @@
+fizmo-ncursesw (0.7.12-2) experimental; urgency=low
+
+  * Fixed superfluous dependency and formatting issues.
+
+ -- Christoph Ender <christoph.ender@spellbreaker.org>  Tue, 22 Nov 2016 07:40:00 +0100
+
 fizmo-ncursesw (0.7.12-1) experimental; urgency=low
 
   * Initial stand-alone packaging for fizmo-ncursesw (Closes: #842692).
