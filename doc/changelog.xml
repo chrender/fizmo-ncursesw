@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <changelog>
+  <change version="0.7.13">
+    <logentry>Show error message in case no installed locales can be found.</logentry>
+  </change>
+
   <change version="0.7.12">
     <datetime day-of-week="Sun" month="10" day="9" hour="11"
       minute="45" second="19" timezone="CEST" year="2016"/>

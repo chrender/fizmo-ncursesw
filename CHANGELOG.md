@@ -1,6 +1,13 @@
 
 
 
+   **Version 0.7.13**
+
+ - Show error message in case no installed locales can be found.
+
+---
+
+
    **Version 0.7.12 — October 9, 2016**
 
  - Adapted to new split-library bulids.
