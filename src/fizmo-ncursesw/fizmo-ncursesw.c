@@ -69,7 +69,7 @@
 
 #include "../locales/fizmo_ncursesw_locales.h"
 
-#define FIZMO_NCURSESW_VERSION "0.7.12"
+#define FIZMO_NCURSESW_VERSION "0.7.13"
 
 #ifdef ENABLE_X11_IMAGES
 #include <drilbo/drilbo.h>
@@ -443,6 +443,11 @@ static void print_startup_syntax()
 {
   int i;
   char **available_locales = get_available_locale_names();
+
+  if (available_locales == NULL) {
+    streams_latin1_output("Could not find any installed locales.\n");
+    exit(EXIT_FAILURE);
+  }
 
   streams_latin1_output("\n");
   i18n_translate(
