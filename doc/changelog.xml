@@ -2,6 +2,7 @@
 <changelog>
   <change version="0.7.13">
     <logentry>Show error message in case no installed locales can be found.</logentry>
+    <logentry>Adapted to replacement of en_US locale with en_GB from libfizmo.</logentry>
   </change>
 
   <change version="0.7.12">
