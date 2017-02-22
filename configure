@@ -683,7 +683,6 @@ infodir
 docdir
 oldincludedir
 includedir
-runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -774,7 +773,6 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
-runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -1027,15 +1025,6 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
-  -runstatedir | --runstatedir | --runstatedi | --runstated \
-  | --runstate | --runstat | --runsta | --runst | --runs \
-  | --run | --ru | --r)
-    ac_prev=runstatedir ;;
-  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
-  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
-  | --run=* | --ru=* | --r=*)
-    runstatedir=$ac_optarg ;;
-
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1173,7 +1162,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir runstatedir
+		libdir localedir mandir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1326,7 +1315,6 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
-  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -3794,12 +3782,12 @@ if test -n "$libfizmo_CFLAGS"; then
     pkg_cv_libfizmo_CFLAGS="$libfizmo_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libfizmo >= 0.7.13\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libfizmo >= 0.7.13") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libfizmo >= 0.7.14\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libfizmo >= 0.7.14") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_libfizmo_CFLAGS=`$PKG_CONFIG --cflags "libfizmo >= 0.7.13" 2>/dev/null`
+  pkg_cv_libfizmo_CFLAGS=`$PKG_CONFIG --cflags "libfizmo >= 0.7.14" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -3811,12 +3799,12 @@ if test -n "$libfizmo_LIBS"; then
     pkg_cv_libfizmo_LIBS="$libfizmo_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libfizmo >= 0.7.13\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libfizmo >= 0.7.13") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libfizmo >= 0.7.14\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libfizmo >= 0.7.14") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_libfizmo_LIBS=`$PKG_CONFIG --libs "libfizmo >= 0.7.13" 2>/dev/null`
+  pkg_cv_libfizmo_LIBS=`$PKG_CONFIG --libs "libfizmo >= 0.7.14" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -3837,14 +3825,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        libfizmo_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libfizmo >= 0.7.13" 2>&1`
+	        libfizmo_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libfizmo >= 0.7.14" 2>&1`
         else
-	        libfizmo_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libfizmo >= 0.7.13" 2>&1`
+	        libfizmo_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libfizmo >= 0.7.14" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$libfizmo_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (libfizmo >= 0.7.13) were not met:
+	as_fn_error $? "Package requirements (libfizmo >= 0.7.14) were not met:
 
 $libfizmo_PKG_ERRORS
 
@@ -3885,12 +3873,12 @@ if test -n "$libmonospaceif_CFLAGS"; then
     pkg_cv_libmonospaceif_CFLAGS="$libmonospaceif_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libmonospaceif >= 0.7.13\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libmonospaceif >= 0.7.13") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libmonospaceif >= 0.7.14\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libmonospaceif >= 0.7.14") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_libmonospaceif_CFLAGS=`$PKG_CONFIG --cflags "libmonospaceif >= 0.7.13" 2>/dev/null`
+  pkg_cv_libmonospaceif_CFLAGS=`$PKG_CONFIG --cflags "libmonospaceif >= 0.7.14" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -3902,12 +3890,12 @@ if test -n "$libmonospaceif_LIBS"; then
     pkg_cv_libmonospaceif_LIBS="$libmonospaceif_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libmonospaceif >= 0.7.13\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libmonospaceif >= 0.7.13") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libmonospaceif >= 0.7.14\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libmonospaceif >= 0.7.14") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_libmonospaceif_LIBS=`$PKG_CONFIG --libs "libmonospaceif >= 0.7.13" 2>/dev/null`
+  pkg_cv_libmonospaceif_LIBS=`$PKG_CONFIG --libs "libmonospaceif >= 0.7.14" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -3928,14 +3916,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        libmonospaceif_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libmonospaceif >= 0.7.13" 2>&1`
+	        libmonospaceif_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libmonospaceif >= 0.7.14" 2>&1`
         else
-	        libmonospaceif_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libmonospaceif >= 0.7.13" 2>&1`
+	        libmonospaceif_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libmonospaceif >= 0.7.14" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$libmonospaceif_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (libmonospaceif >= 0.7.13) were not met:
+	as_fn_error $? "Package requirements (libmonospaceif >= 0.7.14) were not met:
 
 $libmonospaceif_PKG_ERRORS
 
@@ -3976,12 +3964,12 @@ if test -n "$libdrilbo_CFLAGS"; then
     pkg_cv_libdrilbo_CFLAGS="$libdrilbo_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libdrilbo >= 0.2.9\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libdrilbo >= 0.2.9") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libdrilbo >= 0.2.10\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libdrilbo >= 0.2.10") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_libdrilbo_CFLAGS=`$PKG_CONFIG --cflags "libdrilbo >= 0.2.9" 2>/dev/null`
+  pkg_cv_libdrilbo_CFLAGS=`$PKG_CONFIG --cflags "libdrilbo >= 0.2.10" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -3993,12 +3981,12 @@ if test -n "$libdrilbo_LIBS"; then
     pkg_cv_libdrilbo_LIBS="$libdrilbo_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libdrilbo >= 0.2.9\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libdrilbo >= 0.2.9") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libdrilbo >= 0.2.10\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libdrilbo >= 0.2.10") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_libdrilbo_LIBS=`$PKG_CONFIG --libs "libdrilbo >= 0.2.9" 2>/dev/null`
+  pkg_cv_libdrilbo_LIBS=`$PKG_CONFIG --libs "libdrilbo >= 0.2.10" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -4019,14 +4007,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        libdrilbo_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libdrilbo >= 0.2.9" 2>&1`
+	        libdrilbo_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libdrilbo >= 0.2.10" 2>&1`
         else
-	        libdrilbo_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libdrilbo >= 0.2.9" 2>&1`
+	        libdrilbo_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libdrilbo >= 0.2.10" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$libdrilbo_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (libdrilbo >= 0.2.9) were not met:
+	as_fn_error $? "Package requirements (libdrilbo >= 0.2.10) were not met:
 
 $libdrilbo_PKG_ERRORS
 
