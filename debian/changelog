@@ -1,3 +1,9 @@
+fizmo-ncursesw (0.7.13-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- Christoph Ender <christoph.ender@spellbreaker.org>  Web, 22 Nov 2017 01:30:00 +0100
+
 fizmo-ncursesw (0.7.12-2) experimental; urgency=low
 
   * Fixed superfluous dependency and formatting issues.
