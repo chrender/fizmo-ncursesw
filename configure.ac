@@ -3,7 +3,7 @@
 #
 # This file is part of fizmo.
 #
-# Copyright (c) 2009-2016 Christoph Ender.
+# Copyright (c) 2009-2017 Christoph Ender.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -56,7 +56,7 @@ AC_ARG_ENABLE([sdl],
 
 AC_INIT(
  [fizmo-ncursesw],
- [0.7.12],
+ [0.7.13],
  fizmo@spellbreaker.org,
  fizmo-ncursesw)
 
@@ -65,9 +65,9 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
 AC_PROG_RANLIB
 
-PKG_CHECK_MODULES([libfizmo], [libfizmo >= 0.7.13])
-PKG_CHECK_MODULES([libmonospaceif], [libmonospaceif >= 0.7.13])
-PKG_CHECK_MODULES([libdrilbo], [libdrilbo >= 0.2.9])
+PKG_CHECK_MODULES([libfizmo], [libfizmo >= 0.7.14])
+PKG_CHECK_MODULES([libmonospaceif], [libmonospaceif >= 0.7.14])
+PKG_CHECK_MODULES([libdrilbo], [libdrilbo >= 0.2.10])
 AS_IF([test "$enable_sdl" != "no"], [
   PKG_CHECK_MODULES([libsndifsdl2], [libsndifsdl2 >= 0.8.2])
 ])
