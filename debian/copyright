@@ -4,11 +4,11 @@ Upstream-Contact: Christoph Ender <Christoph.Ender@Spellbreaker.org>
 Source: https://fizmo.spellbreaker.org/sources/fizmo-ncursesw
 
 Files: *
-Copyright: 2009-2016, Christoph Ender <Christoph.Ender@Spellbreaker.org>
+Copyright: 2009-2017, Christoph Ender <Christoph.Ender@Spellbreaker.org>
 License: BSD-3-clause
 
 License: BSD-3-clause
- Copyright (c) 2009-2016 Christoph Ender
+ Copyright (c) 2009-2017 Christoph Ender
  All rights reserved.
  .
  Redistribution and use in source and binary forms, with or without
@@ -35,11 +35,5 @@ License: BSD-3-clause
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Files: debian/*
-Copyright: 2009-2016, Christoph Ender <Christoph.Ender@Spellbreaker.org>
-License: permissive
-
-License: permissive
- Copying and distribution of this package, with or without
- modification, are permitted in any medium without royalty
- provided the copyright notice and this notice are
- preserved.
+Copyright: 2009-2017, Christoph Ender <Christoph.Ender@Spellbreaker.org>
+License: BSD-3-clause
