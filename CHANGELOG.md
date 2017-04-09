@@ -1,7 +1,7 @@
 
 
 
-   **Version 0.7.13**
+   **Version 0.7.13 — April 9, 2017**
 
  - Show error message in case no installed locales can be found.
  - Adapted to replacement of en_US locale with en_GB from libfizmo.
