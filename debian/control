@@ -10,7 +10,8 @@ Build-Depends: debhelper (>= 9.0.0),
  libfizmo-dev,
  libmonospaceif-dev,
  libsndifsdl2-dev,
- libdrilbo-dev
+ libdrilbo-dev,
+ ncurses-dev
 Standards-Version: 3.9.8
 Homepage: https://fizmo.spellbreaker.org/
 
