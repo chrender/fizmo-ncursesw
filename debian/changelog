@@ -1,6 +1,6 @@
 fizmo-ncursesw (0.7.13-2) experimental; urgency=low
 
-  * Fixed missing "ncurses-dev" dependency.
+  * Fixed missing "libncurses5-dev" dependency.
 
  -- Christoph Ender <christoph.ender@spellbreaker.org>  Fri, 7 Jul 2017 23:35:00 +0200
 
