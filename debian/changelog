@@ -1,3 +1,10 @@
+fizmo-ncursesw (0.7.13-3) unstable; urgency=low
+
+  * Fix standards version from 4.0.0.4 to 4.0.0.
+  * Switch to unstable.
+
+ -- Christoph Ender <christoph.ender@spellbreaker.org>  Sun, 16 Jul 2017 22:15:00 +0200
+
 fizmo-ncursesw (0.7.13-2) experimental; urgency=low
 
   * Fixed missing "libncursesw5-dev" dependency.

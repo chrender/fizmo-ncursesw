@@ -12,7 +12,7 @@ Build-Depends: debhelper (>= 9.0.0),
  libsndifsdl2-dev,
  libdrilbo-dev,
  libncursesw5-dev
-Standards-Version: 4.0.0.4
+Standards-Version: 4.0.0
 Homepage: https://fizmo.spellbreaker.org/
 
 Package: fizmo-ncursesw
