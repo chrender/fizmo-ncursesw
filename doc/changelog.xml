@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <changelog>
   <change version="0.7.14">
+    <logentry>Renamed copyright files to “license” for github license detection compatibility, see <a href="https://help.github.com/articles/licensing-a-repository/">Github's “Licensing a repository”</a> for further reference.</logentry>
     <logentry>Updated man page.</logentry>
   </change>
 

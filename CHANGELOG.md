@@ -1,6 +1,14 @@
 
 
 
+   **Version 0.7.14**
+
+ - Renamed copyright files to “license” for github license detection compatibility, see Github's “Licensing a repository” for further reference.
+ - Updated man page.
+
+---
+
+
    **Version 0.7.13 — April 9, 2017**
 
  - Show error message in case no installed locales can be found.
