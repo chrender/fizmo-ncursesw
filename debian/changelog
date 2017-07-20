@@ -1,8 +1,9 @@
 fizmo-ncursesw (0.7.13-4) unstable; urgency=low
 
-  * Added missing x11-dev, libjpeg-dev and libpng-dev dependency.
+  * Added missing x11-dev, libsdl2-dev, libsndfile1-dev, libjpeg-dev and
+    libpng-dev dependency.
 
- -- Christoph Ender <christoph.ender@spellbreaker.org>  Thu, 20 Jul 2017 16:45:00 +0200
+ -- Christoph Ender <christoph.ender@spellbreaker.org>  Thu, 20 Jul 2017 16:55:00 +0200
 
 fizmo-ncursesw (0.7.13-3) unstable; urgency=low
 

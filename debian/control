@@ -14,7 +14,9 @@ Build-Depends: debhelper (>= 9.0.0),
  libncursesw5-dev,
  libx11-dev,
  libjpeg-dev,
- libpng-dev
+ libpng-dev,
+ libsdl2-dev,
+ libsndfile1-dev
 Standards-Version: 4.0.0
 Homepage: https://fizmo.spellbreaker.org/
 
