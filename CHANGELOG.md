@@ -1,7 +1,7 @@
 
 
 
-   **Version 0.7.14**
+   **Version 0.7.14 — August 14, 2017**
 
  - Renamed copyright files to “license” for github license detection compatibility, see [Github's “Licensing a repository”](https://help.github.com/articles/licensing-a-repository/) for further reference.
  - Updated man page.
