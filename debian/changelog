@@ -1,3 +1,11 @@
+fizmo-ncursesw (0.7.14-1) unstable; urgency=low
+
+  * New upstream version.
+  * Updated BSD-3 license to include contributors. License is now to 100%
+    identical to the 3-Clause BSD License.
+
+ -- Christoph Ender <christoph.ender@spellbreaker.org>  Tue, 29 Aug 2017 22:20:00 +0200
+
 fizmo-ncursesw (0.7.13-4) unstable; urgency=low
 
   * Added missing x11-dev, libsdl2-dev, libsndfile1-dev, libjpeg-dev and
