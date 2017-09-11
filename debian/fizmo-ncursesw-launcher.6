@@ -1,0 +1,26 @@
+.TH FIZMO-NCURSESW-LAUNCHER 6 "September 11, 2017" "0.7.13"
+.SH NAME
+fizmo-ncursesw-launcher
+- helper script for launching fizmo-ncursesw as zcode-interpreter.
+
+.SH SYNOPSIS
+.B fizmo-ncursesw-launcher
+[ options ]
+
+.SH DESCRIPTION
+In the context of the debian alternatives, fizmo-ncursesw is to be supposed to
+be launched as "zcode-interpreter", which is what this script does. In case it
+is run in a terminal fizmo-ncursesw is invoked directly, else it is started
+inside a x-terminal-emulator.
+
+.SH OPTIONS
+All otions are passed directly to fizmo-ncursesw.
+
+.SH SEE ALSO
+.BR fizmo-console-launcher(6),
+.BR fizmo-ncursesw-sdl2(6)
+
+.SH AUTHOR
+This script was written by Stephen Kitt in the context of debian
+issue #812412.
+
