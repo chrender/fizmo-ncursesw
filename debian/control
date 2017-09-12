@@ -1,6 +1,6 @@
 Source: fizmo-ncursesw
 Section: games
-Priority: extra
+Priority: optional
 Maintainer: Christoph Ender <christoph.ender@spellbreaker.org>
 Build-Depends: debhelper (>= 9.0.0),
  dh-autoreconf,
@@ -17,8 +17,10 @@ Build-Depends: debhelper (>= 9.0.0),
  libpng-dev,
  libsdl2-dev,
  libsndfile1-dev
-Standards-Version: 4.0.0
+Standards-Version: 4.1.0
 Homepage: https://fizmo.spellbreaker.org/
+Vcs-Browser: https://github.com/chrender/fizmo-ncursesw
+Vcs-Git: https://github.com/chrender/fizmo-ncursesw
 
 Package: fizmo-ncursesw
 Replaces: fizmo (<< 0.7.2-1)
