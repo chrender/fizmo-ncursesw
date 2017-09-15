@@ -7,28 +7,27 @@ Build-Depends: debhelper (>= 9.0.0),
  automake,
  autoconf,
  pkg-config,
- libfizmo-dev,
- libmonospaceif-dev,
- libsndifsdl2-dev,
- libdrilbo-dev,
- libncursesw5-dev,
  libx11-dev,
  libjpeg-dev,
  libpng-dev,
  libsdl2-dev,
  libsndfile1-dev
+ libncursesw5-dev,
+ libfizmo-dev (>= 0.7.15),
+ libmonospaceif-dev (>= 0.7.15),
+ libdrilbo-dev (>= 0.2.11),
+ libsndifsdl2-dev (>= 0.8.3)
 Standards-Version: 4.1.0
 Homepage: https://fizmo.spellbreaker.org/
 Vcs-Browser: https://github.com/chrender/fizmo-ncursesw
-Vcs-Git: https://github.com/chrender/fizmo-ncursesw
 
 Package: fizmo-ncursesw
 Replaces: fizmo (<< 0.7.2-1)
 Breaks: fizmo (<< 0.7.2-1)
 Architecture: any
-Depends: libfizmo-common,
- libmonospaceif-common,
- libdrilbo-common,
+Depends: libfizmo-common (>= 0.7.14),
+ libmonospaceif-common (>= 0.7.14),
+ libdrilbo-common (>= 0.2.10),
  ${misc:Depends},
  ${shlibs:Depends}
 Provides: fizmo,
