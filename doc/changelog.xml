@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <changelog>
+  <change version="0.7.15">
+    <datetime day-of-week="Sun" month="2" day="17" hour="9"
+      minute="54" second="15" timezone="CET" year="2019"/>
+    <logentry>Replaced obsolete AC_TRY_LINK with AC_LINK_IFELSE.</logentry>
+    <logentry>Updated tiny-xml-doc-tools.</logentry>
+    <logentry>Fixed underscores in markdown files.</logentry>
+  </change>
+
   <change version="0.7.14">
     <datetime day-of-week="Sun" month="9" day="3" hour="21"
       minute="47" second="12" timezone="CEST" year="2017"/>

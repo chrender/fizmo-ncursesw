@@ -1,6 +1,15 @@
 
 
 
+   **Version 0.7.15 — Febuary 17, 2019**
+
+ - Replaced obsolete AC\_TRY\_LINK with AC\_LINK\_IFELSE.
+ - Updated tiny-xml-doc-tools.
+ - Fixed underscores in markdown files.
+
+---
+
+
    **Version 0.7.14 — September 3, 2017**
 
  - Renamed copyright files to “license” for github license detection compatibility, see [Github's “Licensing a repository”](https://help.github.com/articles/licensing-a-repository/) for further reference.
@@ -13,7 +22,7 @@
    **Version 0.7.13 — April 9, 2017**
 
  - Show error message in case no installed locales can be found.
- - Adapted to replacement of en_US locale with en_GB from libfizmo.
+ - Adapted to replacement of en\_US locale with en\_GB from libfizmo.
 
 ---
 
@@ -61,7 +70,7 @@
 
    **Version 0.7.7 — June 5, 2013**
 
- - Adapted to new “fizmo_register_screen_interface” and “fizmo_start” functions.
+ - Adapted to new “fizmo\_register\_screen\_interface” and “fizmo\_start” functions.
  - Fix build error for some systems due to missing wchar.h include – thanks to Nikos Chantziaras.
  - Added default terminal color evluation.
  - Adapted to new “install-data-local” build target.
@@ -95,7 +104,7 @@
 
    **Version 0.7.3 — August 1, 2012**
 
- - Merged Andrew Plotkin's iOS-fizmo changes: Adapted to “prompt_for_filename” function in screen-cell-interface.
+ - Merged Andrew Plotkin's iOS-fizmo changes: Adapted to “prompt\_for\_filename” function in screen-cell-interface.
  - Minor memory leak cleanups.
 
 ---
@@ -113,8 +122,8 @@
  - Fixed missing “override” statments for CFLAGS in Makefiles.
  - Fixed $(DESTDIR) evaluation in config.[default|macports].mk.
  - Changed manpage install dir from “man” to “share/man”.
- - Adapted Makefiles and configuration to use standard GNU Makefile variables instead of INSTALL_PATH and FIZMO_BIN_DIR.
- - Respect LD_FLAGS for linking.
+ - Adapted Makefiles and configuration to use standard GNU Makefile variables instead of INSTALL\_PATH and FIZMO\_BIN\_DIR.
+ - Respect LD\_FLAGS for linking.
 
 ---
 
@@ -130,16 +139,16 @@
 
    **Version 0.6.9 — April 24, 2011**
 
- - Added NCURSESW_INCLUDE_FROM_W_DIRNAME to configs to allow usage of Apple's ncurses implementation, added GDKPIXBUF_INC_DIR configuration variable.
+ - Added NCURSESW\_INCLUDE\_FROM\_W\_DIRNAME to configs to allow usage of Apple's ncurses implementation, added GDKPIXBUF\_INC\_DIR configuration variable.
 
 ---
 
 
    **Version 0.6.4 — May 24, 2009**
 
- - Bugfix release: Definitely recommend for read_char fix.
- - Fixed interface to supply default colors in case ncurses' “pair_content” returned invalid colors (thanks to Samuel Verschelde).
- - Input from read_char is no longer re-echoed to the screen (thanks to Samnuel Verschelde).
+ - Bugfix release: Definitely recommend for read\_char fix.
+ - Fixed interface to supply default colors in case ncurses' “pair\_content” returned invalid colors (thanks to Samuel Verschelde).
+ - Input from read\_char is no longer re-echoed to the screen (thanks to Samnuel Verschelde).
 
 ---
 
@@ -197,7 +206,7 @@
  - Fixed scrollback and i18n-exit-translation.
  - Fixed libfizmo to also use setitimer/sigaction (makes fizmo work better on linux).
  - Implemented foreground/background color command line parameters for ncursesw interface.
- - Fixed get-cursor-[column|row] for ncursesw (makes PRINT_TABLE and Sherlock work).
+ - Fixed get-cursor-[column|row] for ncursesw (makes PRINT\_TABLE and Sherlock work).
  - Implemented restore from the command line: In case a quetzal-savegame containing the non-standard-chunk “FILE” is given on the command line, fizmo will try to restore the savegame using the story filename stored in this chunk.
 
 ---
@@ -211,7 +220,7 @@
  - Fixed Makefile dependencies.
  - Implemened scrollback for ncursesw interface, added support method for scrollback in “history.c”.
  - Added configuration system.
- - Some split-window / set_window / set_cursor fixed for ncursesw-interface.
+ - Some split-window / set\_window / set\_cursor fixed for ncursesw-interface.
  - Substitued ualarm/signal with setitimer/sigaction since the first one won't catch SIGALRM on linux and manpage says that ualarm is obsolete.
  - Fixed color management so that ncurses color pair is avaiable for reading.
  - Many, many minor bugfixes.
