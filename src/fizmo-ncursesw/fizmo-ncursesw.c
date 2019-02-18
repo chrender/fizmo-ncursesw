@@ -71,7 +71,7 @@
 
 #include "../locales/fizmo_ncursesw_locales.h"
 
-#define FIZMO_NCURSESW_VERSION "0.7.14"
+#define FIZMO_NCURSESW_VERSION "0.7.15"
 
 #ifdef ENABLE_X11_IMAGES
 #include <drilbo/drilbo.h>
