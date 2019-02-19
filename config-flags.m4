@@ -14,18 +14,21 @@ AC_ARG_ENABLE([sound],
 AC_ARG_WITH([ncurses-includedir],
  [AS_HELP_STRING([--with-ncurses-includedir],
           [Specify include directory to use for ncurses.h])],
- [],
- [ncurses_h_dir=])
+ [AC_SUBST([ncurses-includedir],
+   [$( echo $(cd $(dirname "$ncurses-includedir") && pwd -P)/$(basename "$ncurses-includedir") )])],
+ [ncurses-includedir=])
 
 AC_ARG_WITH([ncursesw-libdir],
  [AS_HELP_STRING([--with-ncursesw-libdir],
           [Specify library directory for ncursesw])],
- [],
+ [AC_SUBST([with_ncursesw_libdir],
+   [$( echo $(cd $(dirname "$with_ncursesw_libdir") && pwd -P)/$(basename "$with_ncursesw_libdir") )])],
  [with_ncursesw_libdir=])
 
 AC_ARG_WITH([ncurses-libdir],
  [AS_HELP_STRING([--with-ncurses-libdir],
           [Specify library directory for ncurses])],
- [],
+ [AC_SUBST([with_ncurses_libdir],
+   [$( echo $(cd $(dirname "$with_ncurses_libdir") && pwd -P)/$(basename "$with_ncurses_libdir") )])],
  [with_ncurses_libdir=])
 
