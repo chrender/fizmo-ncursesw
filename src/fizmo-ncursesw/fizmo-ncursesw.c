@@ -70,8 +70,9 @@
 #endif /* SOUND_INTERFACE_INCLUDE_FILE */
 
 #include "../locales/fizmo_ncursesw_locales.h"
+#include "../locales/locale_data.h"
 
-#define FIZMO_NCURSESW_VERSION "0.7.15"
+#define FIZMO_NCURSESW_VERSION "0.9.0"
 
 #ifdef ENABLE_X11_IMAGES
 #include <drilbo/drilbo.h>
@@ -444,7 +445,7 @@ static bool is_italic_available()
 static void print_startup_syntax()
 {
   int i;
-  char **available_locales = get_available_locale_names();
+  z_ucs **available_locales = get_available_locale_names();
 
   if (available_locales == NULL) {
     streams_latin1_output("Could not find any installed locales.\n");
@@ -494,19 +495,11 @@ static void print_startup_syntax()
     if (i != 0)
       streams_latin1_output(", ");
 
-    streams_latin1_output(available_locales[i]);
+    streams_z_ucs_output(available_locales[i]);
     free(available_locales[i]);
     i++;
   }
   free(available_locales);
-  streams_latin1_output(".\n");
-
-  i18n_translate(
-      fizmo_ncursesw_module_name,
-      i18n_ncursesw_LOCALE_SEARCH_PATH);
-  streams_latin1_output(": ");
-  streams_latin1_output(
-      get_i18n_default_search_path());
   streams_latin1_output(".\n");
 
   i18n_translate(
@@ -2391,6 +2384,13 @@ int main(int argc, char *argv[])
 #ifdef SOUND_INTERFACE_STRUCT_NAME
   fizmo_register_sound_interface(&SOUND_INTERFACE_STRUCT_NAME);
 #endif // SOUND_INTERFACE_STRUCT_NAME
+
+  TRACE_LOG("Initializing ncursesw locales.\n");
+  init_fizmo_ncursesw_locales();
+
+  TRACE_LOG("Registerung ncursesw locale module.\n");
+  register_locale_module(
+    locale_module_fizmo_ncursesw.module_name, &locale_module_fizmo_ncursesw);
 
   // Parsing must occur after "fizmo_register_screen_monospace_interface" so
   // that fizmo knows where to forward "parse_config_parameter" parameters
