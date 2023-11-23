@@ -82,15 +82,14 @@
 #define i18n_ncursesw_FUNCTION_CALL_MALLOC_P2D_RETURNED_NULL_PROBABLY_OUT_OF_MEMORY 44
 #define i18n_ncursesw_FIZMO_NCURSESW_VERSION_P0S 45
 #define i18n_ncursesw_LIBMONOSPACEINTERFACE_VERSION_P0S 46
-#define i18n_ncursesw_LOCALE_SEARCH_PATH 47
-#define i18n_ncursesw_FILENAME_TO_READ_COMMANDS_FROM 48
-#define i18n_ncursesw_ENABLE_X11_INLINE_GRAPHICS 49
-#define i18n_ncursesw_LIBDRILBO_VERSION_P0S 50
-#define i18n_ncursesw_DISABLE_HYPHENATION 51
-#define i18n_ncursesw_SET_TRANSCRIPT_FILENAME 52
-#define i18n_ncursesw_FILENAME_TO_RECORD_INPUT_TO 53
-#define i18n_ncursesw_COULD_NOT_OPEN_OR_FIND_P0S 54
-#define i18n_ncursesw_SET_NUMBER_OF_MAXIMUM_UNDO_STEPS 55
+#define i18n_ncursesw_FILENAME_TO_READ_COMMANDS_FROM 47
+#define i18n_ncursesw_ENABLE_X11_INLINE_GRAPHICS 48
+#define i18n_ncursesw_LIBDRILBO_VERSION_P0S 49
+#define i18n_ncursesw_DISABLE_HYPHENATION 50
+#define i18n_ncursesw_SET_TRANSCRIPT_FILENAME 51
+#define i18n_ncursesw_FILENAME_TO_RECORD_INPUT_TO 52
+#define i18n_ncursesw_COULD_NOT_OPEN_OR_FIND_P0S 53
+#define i18n_ncursesw_SET_NUMBER_OF_MAXIMUM_UNDO_STEPS 54
 
 extern z_ucs fizmo_ncursesw_module_name[];
 
