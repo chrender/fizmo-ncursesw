@@ -10,6 +10,16 @@ project(fizmo-ncursesw
   DESCRIPTION "fizmo ncursesw frontend"
   VERSION 0.9.0)
 
+ExternalProject_Add(locale_data_preparation
+  SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/locales
+  BINARY_DIR ${CMAKE_BINARY_DIR}/loacles_build
+  CMAKE_ARGS
+  ${GLOBAL_DEFAULT_ARGS}
+  ${GLOBAL_THIRDPARTY_LIB_ARGS}
+  BUILD_COMMAND make
+  INSTALL_COMMAND cmake -E echo "Skipping install step."
+  )
+
 option(ENABLE_TRACING "Enable tracing" OFF)
 if (ENABLE_TRACING)
   add_definitions(-DENABLE_TRACING)
