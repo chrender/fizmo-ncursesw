@@ -81,6 +81,17 @@ ExternalProject_Add(locale_data_preparation
 find_package(PkgConfig REQUIRED)
 
 
+# We need libfizmo >= 0.9.
+pkg_check_modules(LIBFIZMO REQUIRED libfizmo>=0.9.0)
+
+# We need libmonospaceif >= 0.9.
+pkg_check_modules(LIBMONOSPACEIF REQUIRED libmonospaceif>=0.9.0)
+
+# We need ncursesw.
+pkg_check_modules(NCURSESW REQUIRED ncursesw)
+
+
+
 # Enabling tracing will cause fizmo to write a really, really large amount
 # of debug data to disk while running. Furthermore, after every single
 # write, fizmo will invoke an fsync(), meaning that performance will
@@ -93,19 +104,30 @@ endif()
 
 
 option(ENABLE_FILELIST "Enable filelist" ON)
+if (NOT ENABLE_FILELIST)
+  add_definitions(-DDDISABLE_FILELIST)
+endif()
+
 option(ENABLE_CONFIGFILES "Enable configfiles" ON)
+if (NOT ENABLE_CONFIGFILES)
+  add_definitions(-DDDISABLE_CONFIGFILES)
+endif()
+
 option(ENABLE_SOUND "Enable sound" ON)
+if (ENABLE_SOUND)
+  add_definitions(-DSOUND_INTERFACE_NAME=libsndifsdl
+    -DSOUND_INTERFACE_STRUCT_NAME=sound_interface_sdl
+    -DSOUND_INTERFACE_INCLUDE_FILE="sound_sdl/sound_sdl.h")
+#   -DSOUND_INTERFACE_CONFIGNAME=SOUNDSDL2
+pkg_check_modules(LIBSNDIFSDL REQUIRED libsndifsdl)
+endif()
+
 option(ENABLE_X11_IMAGES "Enable X11" ON)
-
-
-# We need libfizmo >= 0.9.
-pkg_check_modules(LIBFIZMO REQUIRED libfizmo>=0.9.0)
-
-# We need libmonospaceif >= 0.9.
-pkg_check_modules(LIBMONOSPACEIF REQUIRED libmonospaceif>=0.9.0)
-
-# We need ncursesw.
-pkg_check_modules(NCURSESW REQUIRED ncursesw)
+if (ENABLE_X11_IMAGES)
+  # TODO
+  add_definitions(-DENABLE_X11_IMAGES)
+  pkg_check_modules(LIBDRILBO REQUIRED libdrilbo)
+endif()
 
 
 # Store filenames of all files-to-be-compiled in "C_FILES"
@@ -119,12 +141,32 @@ set (c_sources
 # Tell CMake we're going to build an executable "fizmo-ncurses" with the
 # given ".c" files, and specify libs and includes.
 add_executable(fizmo-ncursesw ${c_sources})
-target_include_directories(${PROJECT_NAME} PUBLIC ${LIBFIZMO_INCLUDE_DIRS}
-  ${LIBMONOSPACEIF_INCLUDE_DIRS} ${NCURSESW_INCLUDE_DIRS})
-target_link_directories(${PROJECT_NAME} PUBLIC ${LIBFIZMO_LIBDIR}
-  ${LIBMONOSPACEIF_LIBDIR} ${NCURSESW_LIBDIR})
-target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBFIZMO_LIBRARIES}
-  ${LIBMONOSPACEIF_LIBRARIES} ${NCURSESW_LIBRARIES})
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+  ${LIBFIZMO_INCLUDE_DIRS}
+  ${LIBMONOSPACEIF_INCLUDE_DIRS}
+  ${NCURSESW_INCLUDE_DIRS}
+  ${LIBSNDIFSDL_INCLUDE_DIRS}
+  ${LIBDRILBO_INCLUDE__DIRS})
+
+target_link_directories(${PROJECT_NAME} PUBLIC
+  ${LIBFIZMO_LIBRARY_DIRS}
+  ${LIBMONOSPACEIF_LIBRARY_DIRS}
+  ${NCURSESW_LIBRARY_DIRS}
+  ${LIBSNDIFSDL_LIBRARY_DIRS}
+  ${LIBDRILBO_LIBRARY_DIRS})
+
+set(merged_libs
+  ${LIBFIZMO_LIBRARIES}
+  ${LIBMONOSPACEIF_LIBRARIES}
+  ${NCURSESW_LIBRARIES}
+  ${LIBSNDIFSDL_LIBRARIES}
+  ${LIBDRILBO_LINK_LIBRARIES})
+
+list(REMOVE_DUPLICATES merged_libs)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+  ${merged_libs})
 
 
 install(TARGETS ${PROJECT_NAME})
