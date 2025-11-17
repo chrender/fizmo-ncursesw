@@ -91,7 +91,6 @@ pkg_check_modules(LIBMONOSPACEIF REQUIRED libmonospaceif>=0.9.0)
 pkg_check_modules(NCURSESW REQUIRED ncursesw)
 
 
-
 # Enabling tracing will cause fizmo to write a really, really large amount
 # of debug data to disk while running. Furthermore, after every single
 # write, fizmo will invoke an fsync(), meaning that performance will
@@ -142,12 +141,12 @@ set (c_sources
 # given ".c" files, and specify libs and includes.
 add_executable(fizmo-ncursesw ${c_sources})
 
-target_include_directories(${PROJECT_NAME} PRIVATE
+target_include_directories(${PROJECT_NAME} PUBLIC
   ${LIBFIZMO_INCLUDE_DIRS}
   ${LIBMONOSPACEIF_INCLUDE_DIRS}
   ${NCURSESW_INCLUDE_DIRS}
   ${LIBSNDIFSDL_INCLUDE_DIRS}
-  ${LIBDRILBO_INCLUDE__DIRS})
+  ${LIBDRILBO_INCLUDE_DIRS})
 
 target_link_directories(${PROJECT_NAME} PUBLIC
   ${LIBFIZMO_LIBRARY_DIRS}
