@@ -60,7 +60,7 @@ project(fizmo-ncursesw
   LANGUAGES C
   HOMEPAGE_URL https://fizmo.spellbreaker.org
   DESCRIPTION "fizmo ncursesw frontend"
-  VERSION 0.9.0)
+  VERSION 0.8.0)
 
 
 # Create position-independent code.
@@ -81,11 +81,11 @@ ExternalProject_Add(locale_data_preparation
 find_package(PkgConfig REQUIRED)
 
 
-# We need libfizmo >= 0.9.
-pkg_check_modules(LIBFIZMO REQUIRED libfizmo>=0.9.0)
+# We need libfizmo >= 0.8.
+pkg_check_modules(LIBFIZMO REQUIRED libfizmo>=0.8.0)
 
-# We need libmonospaceif >= 0.9.
-pkg_check_modules(LIBMONOSPACEIF REQUIRED libmonospaceif>=0.9.0)
+# We need libmonospaceif >= 0.8.
+pkg_check_modules(LIBMONOSPACEIF REQUIRED libmonospaceif>=0.8.0)
 
 # We need ncursesw.
 pkg_check_modules(NCURSESW REQUIRED ncursesw)
@@ -114,11 +114,11 @@ endif()
 
 option(ENABLE_SOUND "Enable sound" ON)
 if (ENABLE_SOUND)
-  add_definitions(-DSOUND_INTERFACE_NAME=libsndifsdl
-    -DSOUND_INTERFACE_STRUCT_NAME=sound_interface_sdl
-    -DSOUND_INTERFACE_INCLUDE_FILE="sound_sdl/sound_sdl.h")
+  add_definitions(-DSOUND_INTERFACE_NAME=libsndifsdl2
+    -DSOUND_INTERFACE_STRUCT_NAME=sound_interface_sdl2
+    -DSOUND_INTERFACE_INCLUDE_FILE="sound_sdl2/sound_sdl2.h")
 #   -DSOUND_INTERFACE_CONFIGNAME=SOUNDSDL2
-pkg_check_modules(LIBSNDIFSDL REQUIRED libsndifsdl)
+pkg_check_modules(LIBSNDIFSDL REQUIRED libsndifsdl2)
 endif()
 
 option(ENABLE_X11_IMAGES "Enable X11" ON)
